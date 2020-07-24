@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "651562315167",
+    "firebase_url": "https://vibing-ff145.firebaseio.com",
+    "project_id": "vibing-ff145",
+    "storage_bucket": "vibing-ff145.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:651562315167:android:16fdd979e09945019421aa",
+        "android_client_info": {
+          "package_name": "com.enigma.vibing_app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "651562315167-ndd0sakdms4dqrt1slf2q28gemv6kpna.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAHTMRJ27QHhPJZPFKLVEZOffVKZSBLCdc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "651562315167-ndd0sakdms4dqrt1slf2q28gemv6kpna.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "651562315167-au2mia842mdtn8v854h7kube016mdi3l.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.enigma.vibing"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
