@@ -5,76 +5,49 @@ import 'package:vibing_app/User_Profile.dart';
 import 'package:vibing_app/collaboration.dart';
 import 'package:vibing_app/feed.dart';
 import 'package:vibing_app/forgot_password.dart';
+import 'package:vibing_app/post_collaborations.dart';
 import 'package:vibing_app/register_user.dart';
 import 'package:vibing_app/settings.dart';
 import 'package:vibing_app/side_menu.dart';
+import 'package:vibing_app/user_details_registeration.dart';
+import 'package:vibing_app/view_collaboration_requests.dart';
 import 'package:vibing_app/your_sound_recording_list.dart';
 import 'root_page.dart';
 import 'splash.dart';
 import 'auth.dart';
+import 'package:vibing_app/user_provider.dart';
+import 'package:provider/provider.dart';
 void main()
 {
   WidgetsFlutterBinding.ensureInitialized();
-  runApp(MaterialApp(
-    home: UserLogin(auth: new Auth()) ,
-  )) ;
+  runApp(MyApp());
 }
 
 
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Vibing',
-      routes: <String, WidgetBuilder>{
-        '/user_profile': (BuildContext context)=> new UserProfile(),
-        '/settings':(BuildContext context)=> new Settings(),
-        '/your_sound_recording':(BuildContext context)=> new UserSoundRecordingList(),
-        '/home':(BuildContext context)=> new Home(),
-        '/user_login':(BuildContext context)=> new UserLogin(),
-        '/user_register':(BuildContext context)=> new UserReg(),
-        '/forgot_password':(BuildContext context)=> new ForgotPass(),
-      },
-      home: UserLogin(),
-    );
-  }
-}
-
-class Home extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return DefaultTabController(
-      length: 2,
-      initialIndex: 0,
-      child: Scaffold(
-
-        appBar: AppBar(
-          title: Text('Vibing',style: TextStyle(fontWeight: FontWeight.bold),
-            textAlign: TextAlign.center,),
-          backgroundColor: Colors.yellow,
-          actions: <Widget>[
-            IconButton(
-              iconSize: 30,
-              icon: Icon(Icons.supervised_user_circle),
-              onPressed: null,
-            ),
-          ], 
-          bottom: TabBar(
-            tabs: <Widget>[
-              Tab(text:'Feed',),
-              Tab(text:'Collaborations',)
-            ],
-          ),
-        ),
-        body: TabBarView(
-          children: <Widget>[
-            Feed(),
-            Collaboration(),
-          ],
-        ),
+    return ChangeNotifierProvider(
+      builder: (context)=> UserProvider(),
+      child: MaterialApp(
+        title: 'Vibing',
+        routes: {
+          '/user_profile': (context)=> new UserProfile(),
+          '/settings':(context)=> new Settings(),
+          '/your_sound_recording':(context)=> new UserSoundRecordingList(),
+          '/user_details':(context) => new UserDetails(),
+          '/user_login':(context)=> new UserLogin(),
+          '/user_register':(context)=> new UserReg(),
+          '/forgot_password':(context)=> new ForgotPass(),
+          '/post_collaborations':(context)=> new PostCollaborations(),
+          '/collab_requests':(context)=> new CollabReq(),
+        },
+        home: UserLogin(auth: new Auth()),
       ),
-
     );
   }
 }
+
+
+
 

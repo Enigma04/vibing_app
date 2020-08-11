@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:vibing_app/auth.dart';
 import 'package:vibing_app/User_Login.dart';
+import 'package:vibing_app/collaboration.dart';
 import 'package:vibing_app/your_sound_recording_list.dart';
 import 'package:vibing_app/settings.dart';
 import 'package:vibing_app/User_Profile.dart';
@@ -51,6 +52,13 @@ class Feed extends StatelessWidget {
                 onTap: () {Navigator.push(context, MaterialPageRoute(builder:(context)=>UserProfile()),);}
             ),
             ListTile(
+              title: Text('Collaborations'),
+              trailing: Icon(
+                Icons.accessibility_new,
+              ),
+              onTap: (){Navigator.push(context, MaterialPageRoute(builder:(context)=>Collaboration()),);},
+            ),
+            ListTile(
               title: Text('Settings'),
               trailing: Icon(
                 Icons.settings,
@@ -73,7 +81,7 @@ class Feed extends StatelessWidget {
                   try{
                     String user = await Auth().getCurrentUser();
                     await Auth().signOut().then((value){
-                      Navigator.push(context, MaterialPageRoute(builder: (context)=>UserLogin()));
+                      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>UserLogin()));
                     });
                     print("Signed user $user out successfully!");
                   }

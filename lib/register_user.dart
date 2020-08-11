@@ -1,9 +1,13 @@
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:vibing_app/User_Login.dart';
 import 'package:vibing_app/User_Profile.dart';
+import 'package:vibing_app/firestore_service.dart';
 import 'package:vibing_app/user_details_registeration.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:vibing_app/user_provider.dart';
 import 'auth.dart';
 import 'package:vibing_app/feed.dart';
 
@@ -55,6 +59,8 @@ class UserReg extends StatefulWidget {
       if(_validateAndSave()) {
         try {
           String userId = await Auth().signUp(rEmail, rPass);
+          //FirestoreService().saveUsers(userId);
+
           await Auth().sendEmailVerification();
           formkey.currentState.reset();
           print('Registered! $userId, sent email verification');
@@ -77,67 +83,101 @@ class UserReg extends StatefulWidget {
 
 
 
-  final _regEmail = Container(
-    padding: EdgeInsets.only(left: 10, right: 10),
-    child: TextFormField(
-      keyboardType: TextInputType.emailAddress,
-      autofocus: false,
-      validator: emailValidator,
-      onSaved: (value)=> rEmail = value,
-      decoration: InputDecoration(
-        hintText: 'Enter Email Address',
-        border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(10)
-        ),
-      ),
-    ),
-  );
-
-
-  final _regpass = Container(
-    padding: EdgeInsets.only(left: 10, right: 10),
-    child: TextFormField(
-      obscureText: true,
-      autofocus: false,
-      validator: pwdValidator,
-      onSaved: (value)=> rPass = value,
-      decoration: InputDecoration(
-        hintText: 'Enter password',
-        border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(10)
-        ),
-      ),
-    ),
-  );
-
-
-  /*final _confRegPass = Container(
-    padding: EdgeInsets.only(left: 10, right: 10),
-    child: TextFormField(
-    obscureText: true,
-    autofocus: false,
-      validator: (value)=> value.isEmpty? 'Confirm Password cannot be empty':null,
-      onSaved,
-    decoration: InputDecoration(
-      hintText: 'Confirm Password',
-      border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(10)
-      ),
-    ),
-  ),
-  );*/
 
   @override
   Widget build(BuildContext context) {
+    //final userProvider = Provider.of<UserProvider>(context);
+
+    final _regEmail = Container(
+      padding: EdgeInsets.only(left: 10, right: 10),
+      child: TextFormField(
+        keyboardType: TextInputType.emailAddress,
+        autofocus: false,
+        validator: (value) {
+          if(value.isEmpty)
+          {
+            return 'Email cannot be empty';
+          }
+          else
+            emailValidator(value);
+          return null;
+        },
+        /*onChanged: (value){
+          userProvider.changeEmail(value);
+        },
+
+         */
+        onSaved: (value)=> rEmail = value,
+        decoration: InputDecoration(
+          hintText: 'Enter Email Address',
+          border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(10)
+          ),
+        ),
+      ),
+    );
+
+
+    final _regpass = Container(
+      padding: EdgeInsets.only(left: 10, right: 10),
+      child: TextFormField(
+        obscureText: true,
+        autofocus: false,
+        validator: pwdValidator,
+        /*onChanged: (value){
+          userProvider.changePassword(value);
+        },
+
+         */
+        onSaved: (value)=> rPass = value,
+        decoration: InputDecoration(
+          hintText: 'Enter password',
+          border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(10)
+          ),
+        ),
+      ),
+    );
+
+    final _confPass = Container(
+      padding: EdgeInsets.only(left: 10, right: 10),
+      child: TextFormField(
+        obscureText: true,
+        autofocus: false,
+        validator: (value){
+          if(value != rPass)
+            {
+              return("Password does not match");
+            }
+          return pwdValidator(value);
+        },
+        /*
+        onChanged: (value){
+          userProvider.changePassword(value);
+        },
+
+         */
+        onSaved: (value)=> rPass = value,
+        decoration: InputDecoration(
+          hintText: 'Enter password',
+          border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(10)
+          ),
+        ),
+      ),
+    );
+
     return new Scaffold(
+      resizeToAvoidBottomInset: true,
       backgroundColor: Colors.yellow,
       body: Container(
+        height: MediaQuery.of(context).size.height,
         child: Form(
           key: formkey,
           child: Column(
             crossAxisAlignment:  CrossAxisAlignment.center,
             children: <Widget>[
-              SizedBox(height: 200,),
+              SizedBox(height: MediaQuery.of(context).size.height *0.2,),
               Text('Register',
                 style:TextStyle(
                   fontWeight: FontWeight.bold,
@@ -157,8 +197,8 @@ class UserReg extends StatefulWidget {
                   foregroundColor: Colors.black,
                   onPressed:  (){
                     _validateAndSubmit();
-                   // var auth = Auth();
-                    Navigator.push(context, MaterialPageRoute(builder: (context)=>UserLogin()));
+                   //userProvider.saveUser();
+                    Navigator.pushReplacementNamed(context, '/user_login');
                   },
                   label: Text("Register", style: TextStyle(fontWeight: FontWeight.bold),)
               ),
@@ -166,16 +206,16 @@ class UserReg extends StatefulWidget {
               SizedBox(height: 20,),
               FlatButton(
                 child: Text('Already Registered? Sign in!'),
-                onPressed: ()=> Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>UserLogin())) ,
+                onPressed: ()=> Navigator.pushNamed(context, '/user_login'),
               ),
               Row(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: <Widget>[
                   FloatingActionButton.extended(
-                      heroTag: "prev_button",
+                      heroTag: "prev_button1",
                       backgroundColor: Colors.yellow,
                       foregroundColor: Colors.black,
-                      onPressed:  ()=> Navigator.push(context, MaterialPageRoute(builder: (context)=>UserDetails())),
+                      onPressed:  ()=>  Navigator.pop(context),  //Navigator.push(context, MaterialPageRoute(builder: (context)=>UserDetails())),
                       label: Text("Prev", style: TextStyle(fontWeight: FontWeight.bold),)
                   ),
                 ],

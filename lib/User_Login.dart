@@ -7,7 +7,10 @@ import 'package:vibing_app/feed.dart';
 import'package:vibing_app/register_user.dart';
 import 'package:vibing_app/forgot_password.dart';
 import 'package:vibing_app/main.dart';
+import 'package:vibing_app/settings.dart';
 import 'package:vibing_app/user_details_registeration.dart';
+import 'package:vibing_app/your_sound_recording_list.dart';
+import 'User_Profile.dart';
 import 'auth.dart';
 import 'root_page.dart';
 
@@ -21,13 +24,27 @@ class UserLogin extends StatefulWidget {
   State<StatefulWidget> createState()=> _UserLoginState();
 }
 
+
+
+
 class _UserLoginState extends State<UserLogin> {
 
-  final formkey_forgot_pass = GlobalKey<FormState>();
+  GlobalKey<FormState> _formkey_forgot_pass = GlobalKey<FormState>();
+
+  static String emailValidator(String value) {
+    Pattern pattern =
+        r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$';
+    RegExp regex = new RegExp(pattern);
+    if (!regex.hasMatch(value)) {
+      return 'Email format is invalid';
+    } else {
+      return null;
+    }
+  }
 
   bool _validateAndSave()
   {
-    final form = formkey_forgot_pass.currentState;
+    final form = _formkey_forgot_pass.currentState;
     if(form.validate())
       {
         form.save();
@@ -49,9 +66,9 @@ class _UserLoginState extends State<UserLogin> {
        try {
          String userId = await Auth().signIn(emailid, password);
          print('Signed in! $userId');
-         formkey_forgot_pass.currentState.reset();
+         _formkey_forgot_pass.currentState.reset();
          //widget.onSignedIn();
-         Navigator.push(context, MaterialPageRoute(builder: (context)=>Feed()));
+         Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>Feed()));
        }
        catch (e) {
          print('Error: $e');
@@ -79,7 +96,9 @@ class _UserLoginState extends State<UserLogin> {
            {
              return 'Email cannot be empty';
            }
-          return null;
+         else
+          emailValidator(input);
+         return null;
        },
        //onSaved: (input)=> emailid = input,
        decoration: InputDecoration(
@@ -124,24 +143,27 @@ class _UserLoginState extends State<UserLogin> {
   @override
   Widget build(BuildContext context) {
     return new Scaffold(
+      resizeToAvoidBottomInset: false,
       backgroundColor: Colors.yellow,
       body: Container(
+        width: MediaQuery.of(context).size.width,
+        height: MediaQuery.of(context).size.height,
         child: Form(
-          key: formkey_forgot_pass,
+          key: _formkey_forgot_pass,
           child: Column(
             children: <Widget>[
-              SizedBox(height: 200,),
+              SizedBox(height: MediaQuery.of(context).size.height * 0.2,),
               Text('Vibing',
                 style:TextStyle(
                   fontWeight: FontWeight.bold,
                   fontSize: 64,
                 ),
               ),
-              SizedBox(height: 100,),
+              SizedBox(height: MediaQuery.of(context).size.height * 0.1,),
               _email,
-              SizedBox(height: 20,),
+              SizedBox(height: MediaQuery.of(context).size.height * 0.02,),
               _pass,
-              SizedBox(height:30),
+              SizedBox(height:MediaQuery.of(context).size.height * 0.03),
               RaisedButton(
 
                   color: Colors.yellow,
@@ -151,17 +173,17 @@ class _UserLoginState extends State<UserLogin> {
                     _validateAndSubmit();
                   }
               ),
-              SizedBox(height:10),
+              SizedBox(height:MediaQuery.of(context).size.height * 0.03),
               FlatButton(
                   child: Text('Forgot password'),
                   onPressed: (){
-                    Navigator.pushReplacement(context, MaterialPageRoute(builder:(context)=>ForgotPass()),);
+                    Navigator.pushNamed(context,'/forgot_password');
                   }
               ),
-              SizedBox(height:10),
+              SizedBox(height:MediaQuery.of(context).size.height * 0.02),
               FlatButton(
                   child: Text('New? Register here!'),
-                  onPressed: ()=> Navigator.pushReplacement(context, MaterialPageRoute(builder:(context)=>UserDetails()),)
+                  onPressed: ()=> Navigator.pushNamed(context,'/user_register'),
               ),
             ],
           ),

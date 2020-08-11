@@ -9,12 +9,12 @@ class ForgotPass extends StatefulWidget {
 
 class _ForgotPassState extends State<ForgotPass> {
 
-  static final formkey = GlobalKey<FormState>();
+  static final formkey_forgot = GlobalKey<FormState>();
  static  String _userEmail;
 
   bool _validateAndSave()
   {
-    final form = formkey.currentState;
+    final form = formkey_forgot.currentState;
     if(form.validate())
     {
       form.save();
@@ -29,7 +29,7 @@ class _ForgotPassState extends State<ForgotPass> {
     if(_validateAndSave()) {
       try {
           await Auth().resetPassword(_userEmail);
-         formkey.currentState.reset();
+         formkey_forgot.currentState.reset();
       }
       catch (e) {
         print('Error: $e');
@@ -71,20 +71,20 @@ class _ForgotPassState extends State<ForgotPass> {
       body: Container(
         child:
             Form(
-              key: formkey,
+              key: formkey_forgot,
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.center ,
                 children: <Widget>[
                   Text("Forgot Password?",
                     style: TextStyle(
-                      fontSize: 64.0,
+                      fontSize: 45.0,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
                   SizedBox(height: 100,),
                   _resetEmail,
-                  SizedBox(height: 20,),
+                  SizedBox(height: MediaQuery.of(context).size.height *0.05,),
                   FloatingActionButton.extended(
                     heroTag: "pass_reset_mail",
                     backgroundColor: Colors.yellow,

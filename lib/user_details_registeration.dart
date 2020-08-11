@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:vibing_app/User_Login.dart';
 import 'package:vibing_app/register_user.dart';
 import 'package:vibing_app/register_user.dart';
+import 'package:vibing_app/user_provider.dart';
 
 class UserDetails extends StatefulWidget {
   @override
@@ -18,17 +20,32 @@ class _UserDetailsState extends State<UserDetails> {
   String user_age;
   int group_value = -1;
   Gender _gender = Gender.Male;
+   final formkeyDetails = GlobalKey<FormState>();
 
+  bool _validateAndSave()
+  {
+    final form = formkeyDetails.currentState;
+    if(form.validate())
+    {
+      form.save();
+      return true;
+    }
+    return false;
+  }
   @override
   Widget build(BuildContext context) {
-    final formkey = GlobalKey<FormState>();
-
+    //final _userProvider = Provider.of<UserProvider>(context);
 
     final _firstName = Container(
       padding: EdgeInsets.only(left: 10, right: 10),
       child: TextFormField(
         autofocus: false,
         keyboardType: TextInputType.text,
+        /*onChanged: (value){
+          _userProvider.changeFirstName(value);
+        },
+
+         */
         validator: (value) {
           if(value.isEmpty)
           {
@@ -51,6 +68,11 @@ class _UserDetailsState extends State<UserDetails> {
       child: TextFormField(
         autofocus: false,
         keyboardType: TextInputType.text,
+       /* onChanged: (value){
+          _userProvider.changeLastName(value);
+        }
+        ,
+        */
         validator: (value) {
           if(value.isEmpty)
           {
@@ -58,6 +80,7 @@ class _UserDetailsState extends State<UserDetails> {
           }
           return null;
         },
+
         onSaved: (value)=> userLastName = value,
         decoration: InputDecoration(
           hintText: 'Enter Last Name',
@@ -77,6 +100,11 @@ class _UserDetailsState extends State<UserDetails> {
       child: TextFormField(
         keyboardType: TextInputType.number,
         autofocus: false,
+       /* onChanged: (value){
+          _userProvider.changeAge(value);
+        },
+
+        */
         validator: (value) {
           if(value.isEmpty)
           {
@@ -139,7 +167,7 @@ class _UserDetailsState extends State<UserDetails> {
       backgroundColor: Colors.yellow,
       body: Container(
         child: Form(
-          key: formkey,
+          key: formkeyDetails,
           child:  Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
@@ -174,14 +202,18 @@ class _UserDetailsState extends State<UserDetails> {
                       heroTag: "prev_button",
                       backgroundColor: Colors.yellow,
                       foregroundColor: Colors.black,
-                      onPressed: ()=> Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>UserLogin())),
+                      onPressed: ()=> Navigator.pushNamed(context,'/user_login'),
                       label: Text("Prev", style: TextStyle(fontWeight: FontWeight.bold),)
                   ),
                   FloatingActionButton.extended(
                       heroTag: "next_button",
                       backgroundColor: Colors.yellow,
                       foregroundColor: Colors.black,
-                      onPressed: ()=> Navigator.push(context, MaterialPageRoute(builder: (context)=>UserReg())),
+                      onPressed: () {
+                        _validateAndSave();
+                        Navigator.pushNamed(context, '/user_register');
+                        },
+
                       label: Text("Next", style: TextStyle(fontWeight: FontWeight.bold),)
                   ),
                 ],
