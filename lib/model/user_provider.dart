@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:vibing_app/firestore_service.dart';
+import 'package:vibing_app/model/firestore_service.dart';
 import 'user.dart';
 import 'auth.dart';
 import 'dart:async';
 
 class UserProvider with ChangeNotifier{
-  final firestoreService = FirestoreService();
+  final firestoreService = new FirestoreService();
   String _firstName;
   String _lastName;
   String _email;

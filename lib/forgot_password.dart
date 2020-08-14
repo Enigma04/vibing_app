@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import'package:vibing_app/User_Login.dart';
-import 'auth.dart';
+import 'model/auth.dart';
 
 class ForgotPass extends StatefulWidget {
   @override

@@ -2,7 +2,7 @@
 import'package:flutter/widgets.dart';
 import'package:flutter/foundation.dart';
 import'package:flutter/material.dart';
-import 'package:vibing_app/auth.dart';
+import 'package:vibing_app/model/auth.dart';
 import 'package:vibing_app/feed.dart';
 import'package:vibing_app/register_user.dart';
 import 'package:vibing_app/forgot_password.dart';
@@ -11,7 +11,7 @@ import 'package:vibing_app/settings.dart';
 import 'package:vibing_app/user_details_registeration.dart';
 import 'package:vibing_app/your_sound_recording_list.dart';
 import 'User_Profile.dart';
-import 'auth.dart';
+import 'model/auth.dart';
 import 'root_page.dart';
 
 
@@ -183,7 +183,7 @@ class _UserLoginState extends State<UserLogin> {
               SizedBox(height:MediaQuery.of(context).size.height * 0.02),
               FlatButton(
                   child: Text('New? Register here!'),
-                  onPressed: ()=> Navigator.pushNamed(context,'/user_register'),
+                  onPressed: ()=> Navigator.pushNamed(context,'/user_details'),
               ),
             ],
           ),

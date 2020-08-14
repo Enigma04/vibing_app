@@ -1,5 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:vibing_app/user.dart';
+import 'package:vibing_app/model/user.dart';
 class FirestoreService {
   Firestore _db = Firestore.instance;
   Future<void> saveUsers(User user)

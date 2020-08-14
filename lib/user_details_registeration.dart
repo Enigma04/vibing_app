@@ -1,11 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:vibing_app/User_Login.dart';
+import 'package:vibing_app/model/auth.dart';
+import 'package:vibing_app/model/database.dart';
 import 'package:vibing_app/register_user.dart';
 import 'package:vibing_app/register_user.dart';
-import 'package:vibing_app/user_provider.dart';
+import 'package:vibing_app/model/user_provider.dart';
 
 class UserDetails extends StatefulWidget {
+  String userFirstName;
+  String userLastName;
+  String user_age;
+
+  UserDetails({this.userFirstName, this.userLastName, this.user_age});
   @override
   _UserDetailsState createState() => _UserDetailsState();
 }
@@ -13,13 +20,14 @@ class UserDetails extends StatefulWidget {
 enum Gender{
   Male, Female, Others
 }
-
 class _UserDetailsState extends State<UserDetails> {
   String userFirstName;
   String userLastName;
   String user_age;
   int group_value = -1;
   Gender _gender = Gender.Male;
+
+
    final formkeyDetails = GlobalKey<FormState>();
 
   bool _validateAndSave()
@@ -34,18 +42,17 @@ class _UserDetailsState extends State<UserDetails> {
   }
   @override
   Widget build(BuildContext context) {
-    //final _userProvider = Provider.of<UserProvider>(context);
+    final _userProvider = Provider.of<UserProvider>(context);
 
     final _firstName = Container(
       padding: EdgeInsets.only(left: 10, right: 10),
       child: TextFormField(
         autofocus: false,
         keyboardType: TextInputType.text,
-        /*onChanged: (value){
+        onChanged: (value){
           _userProvider.changeFirstName(value);
         },
 
-         */
         validator: (value) {
           if(value.isEmpty)
           {
@@ -68,11 +75,11 @@ class _UserDetailsState extends State<UserDetails> {
       child: TextFormField(
         autofocus: false,
         keyboardType: TextInputType.text,
-       /* onChanged: (value){
-          _userProvider.changeLastName(value);
+        onChanged: (value){
+         _userProvider.changeLastName(value);
+          userLastName = value;
         }
         ,
-        */
         validator: (value) {
           if(value.isEmpty)
           {
@@ -100,11 +107,11 @@ class _UserDetailsState extends State<UserDetails> {
       child: TextFormField(
         keyboardType: TextInputType.number,
         autofocus: false,
-       /* onChanged: (value){
-          _userProvider.changeAge(value);
+        onChanged: (value){
+         _userProvider.changeAge(value);
+          user_age = value;
         },
 
-        */
         validator: (value) {
           if(value.isEmpty)
           {
@@ -164,6 +171,7 @@ class _UserDetailsState extends State<UserDetails> {
 
 
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       backgroundColor: Colors.yellow,
       body: Container(
         child: Form(
@@ -173,13 +181,13 @@ class _UserDetailsState extends State<UserDetails> {
             children: <Widget>[
               Text("Register",
                 style: TextStyle(fontSize: 64.0, fontWeight: FontWeight.bold),),
-              SizedBox(height: 50,),
+              SizedBox(height: MediaQuery.of(context).size.height * 0.05,),
               _firstName,
-              SizedBox(height: 20,),
+              SizedBox(height: MediaQuery.of(context).size.height * 0.02,),
               _lastName,
-              SizedBox(height: 20,),
+              SizedBox(height: MediaQuery.of(context).size.height * 0.02,),
               _userAge,
-              SizedBox(height: 30,),
+              SizedBox(height: MediaQuery.of(context).size.height * 0.02,),
               Row(
                 crossAxisAlignment: CrossAxisAlignment.center ,
                 children: <Widget>[
@@ -192,7 +200,7 @@ class _UserDetailsState extends State<UserDetails> {
                   Text("Others"),
                 ],
               ),
-
+              SizedBox(height: MediaQuery.of(context).size.height * 0.02,),
               Row(
                 crossAxisAlignment: CrossAxisAlignment.center ,
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -209,11 +217,11 @@ class _UserDetailsState extends State<UserDetails> {
                       heroTag: "next_button",
                       backgroundColor: Colors.yellow,
                       foregroundColor: Colors.black,
-                      onPressed: () {
+                      onPressed: () async{
                         _validateAndSave();
+                        String userid = await Auth().getCurrentUser();
                         Navigator.pushNamed(context, '/user_register');
                         },
-
                       label: Text("Next", style: TextStyle(fontWeight: FontWeight.bold),)
                   ),
                 ],

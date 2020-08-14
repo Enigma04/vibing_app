@@ -1,7 +1,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
-import 'package:vibing_app/auth.dart';
+import 'package:vibing_app/model/auth.dart';
 import 'package:vibing_app/User_Login.dart';
 import 'package:vibing_app/collaboration.dart';
 import 'package:vibing_app/your_sound_recording_list.dart';

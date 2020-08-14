@@ -14,8 +14,8 @@ import 'package:vibing_app/view_collaboration_requests.dart';
 import 'package:vibing_app/your_sound_recording_list.dart';
 import 'root_page.dart';
 import 'splash.dart';
-import 'auth.dart';
-import 'package:vibing_app/user_provider.dart';
+import 'model/auth.dart';
+import 'package:vibing_app/model/user_provider.dart';
 import 'package:provider/provider.dart';
 void main()
 {
@@ -41,6 +41,7 @@ class MyApp extends StatelessWidget {
           '/forgot_password':(context)=> new ForgotPass(),
           '/post_collaborations':(context)=> new PostCollaborations(),
           '/collab_requests':(context)=> new CollabReq(),
+          '/feed': (context) => new Feed(),
         },
         home: UserLogin(auth: new Auth()),
       ),

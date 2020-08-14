@@ -4,16 +4,18 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:vibing_app/User_Login.dart';
 import 'package:vibing_app/User_Profile.dart';
-import 'package:vibing_app/firestore_service.dart';
+import 'package:vibing_app/model/firestore_service.dart';
 import 'package:vibing_app/user_details_registeration.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:vibing_app/user_provider.dart';
-import 'auth.dart';
+import 'package:vibing_app/model/database.dart';
+import 'package:vibing_app/model/user_provider.dart';
+import 'model/auth.dart';
 import 'package:vibing_app/feed.dart';
 
 class UserReg extends StatefulWidget {
-  UserReg({this.auth});
+  UserReg({this.auth, this.rEmail,this.rPass});
   final BaseAuth auth;
+  String rEmail;
+  String rPass;
   @override
   State<StatefulWidget> createState() => _UserRegState();
 }
@@ -60,10 +62,9 @@ class UserReg extends StatefulWidget {
         try {
           String userId = await Auth().signUp(rEmail, rPass);
           //FirestoreService().saveUsers(userId);
-
           await Auth().sendEmailVerification();
-          formkey.currentState.reset();
           print('Registered! $userId, sent email verification');
+          formkey.currentState.reset();
         }
         catch (e) {
           print('Error: $e');
@@ -86,7 +87,7 @@ class UserReg extends StatefulWidget {
 
   @override
   Widget build(BuildContext context) {
-    //final userProvider = Provider.of<UserProvider>(context);
+    final userProvider = Provider.of<UserProvider>(context);
 
     final _regEmail = Container(
       padding: EdgeInsets.only(left: 10, right: 10),
@@ -102,11 +103,10 @@ class UserReg extends StatefulWidget {
             emailValidator(value);
           return null;
         },
-        /*onChanged: (value){
+        onChanged: (value){
           userProvider.changeEmail(value);
         },
 
-         */
         onSaved: (value)=> rEmail = value,
         decoration: InputDecoration(
           hintText: 'Enter Email Address',
@@ -124,11 +124,11 @@ class UserReg extends StatefulWidget {
         obscureText: true,
         autofocus: false,
         validator: pwdValidator,
-        /*onChanged: (value){
+        onChanged: (value){
           userProvider.changePassword(value);
+          rPass = value;
         },
 
-         */
         onSaved: (value)=> rPass = value,
         decoration: InputDecoration(
           hintText: 'Enter password',
@@ -151,15 +151,14 @@ class UserReg extends StatefulWidget {
             }
           return pwdValidator(value);
         },
-        /*
+
         onChanged: (value){
           userProvider.changePassword(value);
         },
 
-         */
         onSaved: (value)=> rPass = value,
         decoration: InputDecoration(
-          hintText: 'Enter password',
+          hintText: 'Confirm password',
           border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(10)
           ),
@@ -168,7 +167,7 @@ class UserReg extends StatefulWidget {
     );
 
     return new Scaffold(
-      resizeToAvoidBottomInset: true,
+      resizeToAvoidBottomInset: false,
       backgroundColor: Colors.yellow,
       body: Container(
         height: MediaQuery.of(context).size.height,
@@ -184,26 +183,26 @@ class UserReg extends StatefulWidget {
                   fontSize: 64,
                 ),
               ),
-              SizedBox(height: 100,),
+              SizedBox(height: MediaQuery.of(context).size.height * 0.06,),
               _regEmail,
-              SizedBox(height: 20,),
+              SizedBox(height: MediaQuery.of(context).size.height * 0.03,),
               _regpass,
-              SizedBox(height:30),
-              //_confRegPass,
-              SizedBox(height: 30,),
+              SizedBox(height:MediaQuery.of(context).size.height * 0.03),
+              //_confPass,
+              //SizedBox(height: MediaQuery.of(context).size.height * 0.03,),
               FloatingActionButton.extended(
                   heroTag: "Register_Button",
                   backgroundColor: Colors.yellow,
                   foregroundColor: Colors.black,
                   onPressed:  (){
                     _validateAndSubmit();
-                   //userProvider.saveUser();
+                    userProvider.saveUser();
                     Navigator.pushReplacementNamed(context, '/user_login');
                   },
                   label: Text("Register", style: TextStyle(fontWeight: FontWeight.bold),)
               ),
 
-              SizedBox(height: 20,),
+              SizedBox(height: MediaQuery.of(context).size.height * 0.02,),
               FlatButton(
                 child: Text('Already Registered? Sign in!'),
                 onPressed: ()=> Navigator.pushNamed(context, '/user_login'),

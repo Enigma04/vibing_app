@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:vibing_app/User_Login.dart';
-import 'auth.dart';
+import 'model/auth.dart';
 import 'feed.dart';
 class RootPage extends StatefulWidget {
   RootPage({this.auth});
