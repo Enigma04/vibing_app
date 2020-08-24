@@ -195,8 +195,8 @@ class UserReg extends StatefulWidget {
                   backgroundColor: Colors.yellow,
                   foregroundColor: Colors.black,
                   onPressed:  (){
-                    _validateAndSubmit();
                     userProvider.saveUser();
+                    _validateAndSubmit();
                     Navigator.pushReplacementNamed(context, '/user_login');
                   },
                   label: Text("Register", style: TextStyle(fontWeight: FontWeight.bold),)

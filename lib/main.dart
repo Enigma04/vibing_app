@@ -2,11 +2,13 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:vibing_app/User_Login.dart';
 import 'package:vibing_app/User_Profile.dart';
+import 'package:vibing_app/User_Vibe.dart';
 import 'package:vibing_app/collaboration.dart';
 import 'package:vibing_app/feed.dart';
 import 'package:vibing_app/forgot_password.dart';
 import 'package:vibing_app/post_collaborations.dart';
 import 'package:vibing_app/register_user.dart';
+import 'package:vibing_app/screens/edit_user_profile.dart';
 import 'package:vibing_app/settings.dart';
 import 'package:vibing_app/side_menu.dart';
 import 'package:vibing_app/user_details_registeration.dart';
@@ -42,6 +44,8 @@ class MyApp extends StatelessWidget {
           '/post_collaborations':(context)=> new PostCollaborations(),
           '/collab_requests':(context)=> new CollabReq(),
           '/feed': (context) => new Feed(),
+          '/edit_user_profile': (context) => new EditProfile(),
+          '/vibe': (context)=> new UserVibe(),
         },
         home: UserLogin(auth: new Auth()),
       ),

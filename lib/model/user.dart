@@ -21,5 +21,13 @@ class User {
       'age' : age,
       //'gender' : gender,
     };
+
   }
+  /*
+  User.fromFirestore(Map<String, dynamic> firestore)
+     : firstName = firestore['first_name'],
+      lastName = firestore['last_name'];
+
+   */
+
 }

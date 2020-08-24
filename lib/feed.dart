@@ -8,6 +8,7 @@ import 'package:vibing_app/your_sound_recording_list.dart';
 import 'package:vibing_app/settings.dart';
 import 'package:vibing_app/User_Profile.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'User_Vibe.dart';
 
 class Feed extends StatelessWidget {
   Feed({this.auth, this.onSignedOut});
@@ -29,6 +30,7 @@ class Feed extends StatelessWidget {
   }
 
  */
+int count = 0;
 
   @override
   Widget build(BuildContext context) {
@@ -293,20 +295,17 @@ class Feed extends StatelessWidget {
                                     ],
                                   )
                               ),
-                           BottomAppBar(
-                             child: Column(
-                               crossAxisAlignment: CrossAxisAlignment.center,
-                           children: <Widget>[
-                             FloatingActionButton(
-                               child: Text("Vibe"),
-                               backgroundColor: Colors.yellow,
-                               onPressed: null,
-                               autofocus: true,
-                               tooltip: 'Vibe'
-                             ),
-                           ],
-                           )
-                           ),
+                              Row(
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  FloatingActionButton(
+                                    onPressed: null,
+                                    child: Text("Vibe"),
+                                    backgroundColor: Colors.yellow,
+                                  ),
+                                ],
+                              )
                             ],
                           )
                         ]
@@ -314,6 +313,24 @@ class Feed extends StatelessWidget {
                     ),
                   ],
                 ),
+              bottomNavigationBar: Container(
+                color: Colors.yellow,
+                height: 60,
+                child: InkWell(
+                  onTap: ()=> Navigator.pushNamed(context, '/vibe'),
+                  child: Padding(
+                    padding: EdgeInsets.only(top: 8),
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(Icons.add),
+                        Text("Vibe")
+                      ],
+                    ),
+                  )
+                ),
+              ),
             );
   }
 }

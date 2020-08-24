@@ -218,8 +218,8 @@ class _UserDetailsState extends State<UserDetails> {
                       backgroundColor: Colors.yellow,
                       foregroundColor: Colors.black,
                       onPressed: () async{
+                        //String userid = await Auth().getCurrentUser();
                         _validateAndSave();
-                        String userid = await Auth().getCurrentUser();
                         Navigator.pushNamed(context, '/user_register');
                         },
                       label: Text("Next", style: TextStyle(fontWeight: FontWeight.bold),)
