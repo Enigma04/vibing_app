@@ -40,6 +40,7 @@ class _UserDetailsState extends State<UserDetails> {
     }
     return false;
   }
+
   @override
   Widget build(BuildContext context) {
     final _userProvider = Provider.of<UserProvider>(context);

@@ -23,7 +23,7 @@ class UserReg extends StatefulWidget {
   class _UserRegState extends State<UserReg> {
 
 
-    final formkey = GlobalKey<FormState>();
+    final _formkey = GlobalKey<FormState>();
 
   static String emailValidator(String value) {
     Pattern pattern =
@@ -46,7 +46,7 @@ class UserReg extends StatefulWidget {
 
   bool _validateAndSave()
   {
-    final form = formkey.currentState;
+    final form = _formkey.currentState;
     if(form.validate())
       {
         form.save();
@@ -64,7 +64,8 @@ class UserReg extends StatefulWidget {
           //FirestoreService().saveUsers(userId);
           await Auth().sendEmailVerification();
           print('Registered! $userId, sent email verification');
-          formkey.currentState.reset();
+          _formkey.currentState.reset();
+
         }
         catch (e) {
           print('Error: $e');
@@ -172,7 +173,7 @@ class UserReg extends StatefulWidget {
       body: Container(
         height: MediaQuery.of(context).size.height,
         child: Form(
-          key: formkey,
+          key: _formkey,
           child: Column(
             crossAxisAlignment:  CrossAxisAlignment.center,
             children: <Widget>[

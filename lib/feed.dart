@@ -1,4 +1,5 @@
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:vibing_app/model/auth.dart';
@@ -110,7 +111,92 @@ int count = 0;
         style: TextStyle(fontWeight: FontWeight.bold),
         textAlign: TextAlign.center,),
       ),
-      body: CustomScrollView(
+      body: StreamBuilder(
+        stream:Firestore.instance.collection('user_posts').snapshots() ,
+        builder:(context, snapshot){
+          if(!snapshot.hasData)
+            {
+              const Text("Loading");
+            }
+          else{
+            return ListView.builder(
+              itemCount: snapshot.data.documents.length ,
+                itemBuilder: (context,index){
+                DocumentSnapshot myPost = snapshot.data.documents[index];
+                return Stack(
+                children: [
+                  Container(
+                    margin: EdgeInsets.all(5),
+                    width: MediaQuery.of(context).size.width,
+                    height: MediaQuery.of(context).size.height * 0.2,
+                    child: Column(
+
+                      children: [
+
+                      ],
+                    ),
+
+                  ),
+                ],
+                );
+                },
+            );
+          }
+        },
+      ),
+      bottomNavigationBar: Container(
+                color: Colors.yellow,
+                height: 60,
+                child: InkWell(
+                  onTap: ()=> Navigator.pushNamed(context, '/vibe'),
+                  child: Padding(
+                    padding: EdgeInsets.only(top: 8),
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(Icons.add),
+                        Text("Vibe")
+                      ],
+                    ),
+                  )
+                ),
+              ),
+            );
+  }
+}
+
+/*Card(
+margin: EdgeInsets.all(5) ,
+child: Column(
+children: <Widget>[
+ListTile(
+leading: Icon(Icons.supervised_user_circle),
+title: Text('Profile 1'),
+subtitle: Text("Want y'all to listen to this amazing song!!"),
+),
+ButtonBar(
+children: <Widget>[
+IconButton(
+icon: Icon(Icons.favorite,
+color: Colors.grey,
+),
+alignment: Alignment(-60,0) ,
+),
+IconButton(
+icon: Icon(Icons.comment,
+color: Colors.lightBlueAccent,),
+alignment: Alignment(-58,0),
+)
+],
+),
+],
+),
+),
+ */
+
+/*
+CustomScrollView(
               controller: ScrollController(),
               scrollDirection: Axis.vertical,
               slivers: <Widget>[
@@ -295,17 +381,6 @@ int count = 0;
                                     ],
                                   )
                               ),
-                              Row(
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  FloatingActionButton(
-                                    onPressed: null,
-                                    child: Text("Vibe"),
-                                    backgroundColor: Colors.yellow,
-                                  ),
-                                ],
-                              )
                             ],
                           )
                         ]
@@ -313,53 +388,4 @@ int count = 0;
                     ),
                   ],
                 ),
-              bottomNavigationBar: Container(
-                color: Colors.yellow,
-                height: 60,
-                child: InkWell(
-                  onTap: ()=> Navigator.pushNamed(context, '/vibe'),
-                  child: Padding(
-                    padding: EdgeInsets.only(top: 8),
-                    child: Row(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Icon(Icons.add),
-                        Text("Vibe")
-                      ],
-                    ),
-                  )
-                ),
-              ),
-            );
-  }
-}
-
-/*Card(
-margin: EdgeInsets.all(5) ,
-child: Column(
-children: <Widget>[
-ListTile(
-leading: Icon(Icons.supervised_user_circle),
-title: Text('Profile 1'),
-subtitle: Text("Want y'all to listen to this amazing song!!"),
-),
-ButtonBar(
-children: <Widget>[
-IconButton(
-icon: Icon(Icons.favorite,
-color: Colors.grey,
-),
-alignment: Alignment(-60,0) ,
-),
-IconButton(
-icon: Icon(Icons.comment,
-color: Colors.lightBlueAccent,),
-alignment: Alignment(-58,0),
-)
-],
-),
-],
-),
-),
  */
