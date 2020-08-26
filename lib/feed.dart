@@ -125,23 +125,49 @@ int count = 0;
                 DocumentSnapshot myPost = snapshot.data.documents[index];
                 return Stack(
                 children: [
-                  Container(
-                    margin: EdgeInsets.all(5),
-                    width: MediaQuery.of(context).size.width,
-                    height: MediaQuery.of(context).size.height * 0.2,
-                    child: Column(
+                  Column(
+                    children: [
+                      Container(
+                        margin: EdgeInsets.all(5),
+                        width: MediaQuery.of(context).size.width,
+                        height: MediaQuery.of(context).size.height * 0.2,
+                        child:  Card(
+                            margin: EdgeInsets.all(5),
+                            child: Column(
+                              children: <Widget>[
+                                ListTile(
+                                  leading: Icon(Icons.supervised_user_circle),
+                                  title: Text('${myPost['user_name']}'),
+                                  subtitle: Text("${myPost['post']}"),
 
-                      children: [
-
-                      ],
-                    ),
-
+                                ),
+                                ButtonBar(
+                                  children: <Widget>[
+                                    IconButton(
+                                      icon: Icon(Icons.favorite_border),
+                                      alignment: Alignment(-60, 0),
+                                      onPressed: null,
+                                    ),
+                                    IconButton(
+                                      icon: Icon(Icons.add_comment),
+                                      color: Colors.lightBlue,
+                                      alignment: Alignment(-60, 0),
+                                      onPressed: null,
+                                    ),
+                                  ],
+                                )
+                              ],
+                            )
+                        ),
+                      ),
+                    ],
                   ),
                 ],
                 );
                 },
             );
           }
+          return null;
         },
       ),
       bottomNavigationBar: Container(
