@@ -4,26 +4,31 @@ import 'package:uuid/uuid.dart';
 import 'package:vibing_app/model/auth.dart';
 import 'package:uuid/uuid.dart';
 import 'package:uuid/uuid_util.dart';
+import 'package:vibing_app/model/user_provider.dart';
+import 'package:vibing_app/model/user.dart';
+
 
 class UserVibe extends StatefulWidget {
   @override
   _UserVibeState createState() => _UserVibeState();
 }
- var uuid = Uuid();
 
 class _UserVibeState extends State<UserVibe> {
-  String post, time;
-  final user = Auth().getCurrentUser();
+  String post;
+  static final user = Auth().getCurrentUser();
+  //Future<QuerySnapshot> userName =
+  //var userName = User.;
   getPost(post){
     this.post = post;
   }
   final _formkey = GlobalKey<FormState>();
 
   vibe()async{
-    DocumentReference ds = Firestore.instance.collection('user_posts').document(uuid.v1());
+    DocumentReference ds = Firestore.instance.collection('user_posts').document(Timestamp.now().toDate().toIso8601String());
     Map <String, dynamic> userPost={
       'post': post,
-      'user_name': await user,
+      'time': Timestamp.now().toDate(),
+      'user_name': user,
     };
      ds.setData(userPost).whenComplete(() => print("Posted!"));
   }
@@ -32,6 +37,7 @@ class _UserVibeState extends State<UserVibe> {
 
   @override
   Widget build(BuildContext context) {
+
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.yellow,

@@ -16,6 +16,8 @@ class Feed extends StatelessWidget {
   final BaseAuth auth;
   final VoidCallback onSignedOut;
 
+
+  
 /*
   void _signOut() async {
     try{
@@ -52,7 +54,7 @@ int count = 0;
                 trailing: Icon(
                   Icons.supervised_user_circle,
                 ),
-                onTap: () {Navigator.push(context, MaterialPageRoute(builder:(context)=>UserProfile()),);}
+                onTap: () {Navigator.push(context, MaterialPageRoute(builder:(context)=>UserProfile(userProfileId: Auth().getCurrentUser().toString())),);}
             ),
             ListTile(
               title: Text('Collaborations'),
@@ -116,9 +118,10 @@ int count = 0;
         builder:(context, snapshot){
           if(!snapshot.hasData)
             {
-              const Text("Loading");
+              Center(
+                child: CircularProgressIndicator() ,
+              );
             }
-          else{
             return ListView.builder(
               itemCount: snapshot.data.documents.length ,
                 itemBuilder: (context,index){
@@ -166,8 +169,7 @@ int count = 0;
                 );
                 },
             );
-          }
-          return null;
+
         },
       ),
       bottomNavigationBar: Container(
@@ -192,226 +194,3 @@ int count = 0;
   }
 }
 
-/*Card(
-margin: EdgeInsets.all(5) ,
-child: Column(
-children: <Widget>[
-ListTile(
-leading: Icon(Icons.supervised_user_circle),
-title: Text('Profile 1'),
-subtitle: Text("Want y'all to listen to this amazing song!!"),
-),
-ButtonBar(
-children: <Widget>[
-IconButton(
-icon: Icon(Icons.favorite,
-color: Colors.grey,
-),
-alignment: Alignment(-60,0) ,
-),
-IconButton(
-icon: Icon(Icons.comment,
-color: Colors.lightBlueAccent,),
-alignment: Alignment(-58,0),
-)
-],
-),
-],
-),
-),
- */
-
-/*
-CustomScrollView(
-              controller: ScrollController(),
-              scrollDirection: Axis.vertical,
-              slivers: <Widget>[
-                    SliverList(
-                      delegate: SliverChildListDelegate(
-                        [
-                          Column(
-                            mainAxisAlignment: MainAxisAlignment.spaceAround,
-                            children: <Widget>[
-                              Card(
-
-                                  margin: EdgeInsets.all(5),
-                                  child: Column(
-                                    children: <Widget>[
-                                      ListTile(
-                                        leading: Icon(Icons.supervised_user_circle),
-                                        title: Text('Profile 1'),
-                                        subtitle: Text(
-                                            "Want y'all to listen to this amazing song!!!"),
-
-                                      ),
-                                      ButtonBar(
-                                        children: <Widget>[
-                                          IconButton(
-                                            icon: Icon(Icons.favorite_border),
-                                            alignment: Alignment(-60, 0),
-                                            onPressed: null,
-                                          ),
-                                          IconButton(
-                                            icon: Icon(Icons.add_comment),
-                                            color: Colors.lightBlue,
-                                            alignment: Alignment(-60, 0),
-                                            onPressed: null,
-                                          ),
-                                        ],
-                                      )
-                                    ],
-                                  )
-                              ),
-                              Card(
-                                  margin: EdgeInsets.all(5),
-                                  child: Column(
-                                    children: <Widget>[
-                                      ListTile(
-                                        leading: Icon(Icons.supervised_user_circle),
-                                        title: Text('Profile 1'),
-                                        subtitle: Text(
-                                            "Want y'all to listen to this amazing song!!!"),
-
-                                      ),
-                                      ButtonBar(
-                                        children: <Widget>[
-                                          IconButton(
-                                            icon: Icon(Icons.favorite_border),
-                                            alignment: Alignment(-60, 0),
-                                            onPressed: null,
-                                          ),
-                                          IconButton(
-                                            icon: Icon(Icons.add_comment),
-                                            color: Colors.lightBlue,
-                                            alignment: Alignment(-60, 0),
-                                            onPressed: null,
-                                          ),
-                                        ],
-                                      )
-                                    ],
-                                  )
-                              ),
-                              Card(
-                                  margin: EdgeInsets.all(5),
-                                  child: Column(
-                                    children: <Widget>[
-                                      ListTile(
-                                        leading: Icon(Icons.supervised_user_circle),
-                                        title: Text('Profile 1'),
-                                        subtitle: Text(
-                                            "Want y'all to listen to this amazing song!!!"),
-
-                                      ),
-                                      ButtonBar(
-                                        children: <Widget>[
-                                          IconButton(
-                                            icon: Icon(Icons.favorite_border),
-                                            alignment: Alignment(-60, 0),
-                                            onPressed: null,
-                                          ),
-                                          IconButton(
-                                            icon: Icon(Icons.add_comment),
-                                            color: Colors.lightBlue,
-                                            alignment: Alignment(-60, 0),
-                                            onPressed: null,
-                                          ),
-                                        ],
-                                      )
-                                    ],
-                                  )
-                              ),
-                              Card(
-                                  margin: EdgeInsets.all(5),
-                                  child: Column(
-                                    children: <Widget>[
-                                      ListTile(
-                                        leading: Icon(Icons.supervised_user_circle),
-                                        title: Text('Profile 1'),
-                                        subtitle: Text(
-                                            "Want y'all to listen to this amazing song!!!"),
-
-                                      ),
-                                      ButtonBar(
-                                        children: <Widget>[
-                                          IconButton(
-                                            icon: Icon(Icons.favorite_border),
-                                            alignment: Alignment(-60, 0),
-                                            onPressed: null,
-                                          ),
-                                          IconButton(
-                                            icon: Icon(Icons.add_comment),
-                                            color: Colors.lightBlue,
-                                            alignment: Alignment(-60, 0),
-                                            onPressed: null,
-                                          ),
-                                        ],
-                                      )
-                                    ],
-                                  )
-                              ),
-                              Card(
-                                  margin: EdgeInsets.all(5),
-                                  child: Column(
-                                    children: <Widget>[
-                                      ListTile(
-                                        leading: Icon(Icons.supervised_user_circle),
-                                        title: Text('Profile 1'),
-                                        subtitle: Text(
-                                            "Want y'all to listen to this amazing song!!!"),
-
-                                      ),
-                                      ButtonBar(
-                                        children: <Widget>[
-                                          IconButton(
-                                            icon: Icon(Icons.favorite_border),
-                                            alignment: Alignment(-60, 0),
-                                            onPressed: null,
-                                          ),
-                                          IconButton(
-                                            icon: Icon(Icons.add_comment),
-                                            color: Colors.lightBlue,
-                                            alignment: Alignment(-60, 0),
-                                            onPressed: null,
-                                          ),
-                                        ],
-                                      )
-                                    ],
-                                  )
-                              ),
-                              Card(
-                                  margin: EdgeInsets.all(5),
-                                  child: Column(
-                                    children: <Widget>[
-                                      ListTile(
-                                        leading: Icon(Icons.supervised_user_circle),
-                                        title: Text('Profile 1'),
-                                        subtitle: Text(
-                                            "Want y'all to listen to this amazing song!!!"),
-
-                                      ),
-                                      ButtonBar(
-                                        children: <Widget>[
-                                          IconButton(
-                                            icon: Icon(Icons.favorite_border),
-                                            alignment: Alignment(-60, 0),
-                                            onPressed: null,
-                                          ),
-                                          IconButton(
-                                            icon: Icon(Icons.add_comment),
-                                            color: Colors.lightBlue,
-                                            alignment: Alignment(-60, 0),
-                                            onPressed: null,
-                                          ),
-                                        ],
-                                      )
-                                    ],
-                                  )
-                              ),
-                            ],
-                          )
-                        ]
-                      ),
-                    ),
-                  ],
-                ),
- */

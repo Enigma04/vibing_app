@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:vibing_app/User_Profile.dart';
 
 class EditProfile extends StatefulWidget {
+  String currentUserId;
+  EditProfile({this.currentUserId});
   @override
   _EditProfileState createState() => _EditProfileState();
 }

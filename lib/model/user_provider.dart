@@ -9,6 +9,7 @@ class UserProvider with ChangeNotifier{
   String _lastName;
   String _email;
   String _password;
+  String _bio;
   int _age;
  // int _gender;
   var uid = Auth().getCurrentUser();
@@ -18,6 +19,7 @@ String get lastName => _lastName;
 String get email => _email;
 String get password => _password;
 int get age  => _age;
+String get bio => _bio;
 //int get gender => _gender;
   //Setters
 changeFirstName(String value){
@@ -43,7 +45,7 @@ changePassword(String value){
 
 saveUser()
 async{
-  var newUser = User(firstName: firstName, lastName: lastName, age: age, email: email, password: password, userId: await uid);
+  var newUser = User(firstName: firstName, lastName: lastName, age: age, email: email, password: password, userId: await uid, bio: bio);
   firestoreService.saveUsers(newUser);
   print("$firstName, $lastName, $age, $email, $password");
 }

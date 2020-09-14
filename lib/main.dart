@@ -8,7 +8,7 @@ import 'package:vibing_app/feed.dart';
 import 'package:vibing_app/forgot_password.dart';
 import 'package:vibing_app/post_collaborations.dart';
 import 'package:vibing_app/register_user.dart';
-import 'package:vibing_app/screens/edit_user_profile.dart';
+import 'package:vibing_app/edit_user_profile.dart';
 import 'package:vibing_app/settings.dart';
 import 'package:vibing_app/side_menu.dart';
 import 'package:vibing_app/user_details_registeration.dart';

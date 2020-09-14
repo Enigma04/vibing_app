@@ -1,12 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:vibing_app/edit_user_profile.dart';
 import 'main.dart';
+import 'package:vibing_app/model/auth.dart';
+import 'package:vibing_app/model/user.dart';
 class UserProfile extends StatefulWidget {
+  final String userProfileId;
+  UserProfile({this.userProfileId});
   @override
   _UserProfileState createState() => _UserProfileState();
 }
 
 class _UserProfileState extends State<UserProfile> {
+
+  String currentUserId = Auth().getCurrentUser().toString();
 
 
   static final _profilePic = CircleAvatar(
@@ -15,17 +22,88 @@ class _UserProfileState extends State<UserProfile> {
     radius: 60
   );
 
-  static final _userName = Text("Rohit Thukral");
+  static final _userName = Text("Rohit");
 
+  createProfileTopView() {
+    return FutureBuilder(
+      future: Firestore.instance.collection('user').document(widget.userProfileId).get(),
+      builder: (context,dataSnapshot){
+        if(!dataSnapshot.hasData){
+          return CircularProgressIndicator();
+        }
+        User user = User.fromDocument(dataSnapshot.data);
+        return Padding(
+          padding: EdgeInsets.all(8),
+          child: Column(
+            children: [
+              Row(
+                children: [
+                  CircleAvatar(
+                    backgroundColor: Colors.grey,
+                    radius: 60,
+                  ),
+                  Expanded(
+                    flex: 1,
+                    child: Column(
+                      children: [
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceAround,
+                          mainAxisSize: MainAxisSize.max,
+                          children: [
+                            socialNumbers('followers',0),
+                            socialNumbers('following', 0),
+                          ],
+                        ),
+                        Container(
+                          alignment: Alignment.centerLeft,
+                          padding: EdgeInsets.only(top: 8),
+                          child: Text(user.userId),
+                        )
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+  socialNumbers(String title, int count)
+  {
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Text(
+          count.toString(),
+          style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
+        ),
+        Container(
+          margin: EdgeInsets.only(top: 5),
+          child: Text(title, style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),),
+        )
+      ],
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
 
      final _editUserProfileButton = RaisedButton(
-      onPressed: ()=> Navigator.pushNamed(context, '/edit_user_profile'),
+      onPressed: ()=> Navigator.push(context, MaterialPageRoute(builder: (context)=> EditProfile(currentUserId: currentUserId))),
       color: Colors.yellow,
       child: Text("Edit Profile"),
     );
+
+     createButton(){
+       bool ownProfile = currentUserId == widget.userProfileId;
+       if(ownProfile){
+         return _editUserProfileButton;
+       }
+     }
 
       final _followersButton = FlatButton(
        onPressed: null,
@@ -37,53 +115,7 @@ class _UserProfileState extends State<UserProfile> {
        child: Text("Following", style: TextStyle(fontWeight: FontWeight.bold, color: Colors.black),),
      );
 
-     final _profileCard = Container(
-       height: MediaQuery.of(context).size.height * 0.45,
-      width: MediaQuery.of(context).size.width * 5 ,
-      child: Card(
-        margin: EdgeInsets.all(8),
 
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-
-          children: [
-            SizedBox(height: MediaQuery.of(context).size.height *0.01,),
-            Row(
-              children: [
-                Container(
-                  margin: EdgeInsets.all(5),
-                  child:_profilePic,
-                ),
-                SizedBox(width: MediaQuery.of(context).size.width *0.06,),
-                _followersButton,
-                SizedBox(width: MediaQuery.of(context).size.width *0.06,),
-                _followingButton,
-              ],
-            ),
-            SizedBox(height: MediaQuery.of(context).size.height *0.01,),
-         Container(
-           margin: EdgeInsets.all(5),
-           child:_userName,
-         ),
-            SizedBox(height: MediaQuery.of(context).size.height *0.005,),
-            Text("Rohit Gurunath Sharma is an Indian international cricketer who plays for Mumbai in domestic cricket and captains Mumbai Indians in the Indian Premier League as a right-handed batsman and an occasional right-arm off break bowler. He is the vice-captain of the Indian national team in limited-overs formats.", style: TextStyle(
-                fontSize: 14.0
-            ),
-            ),
-            SizedBox(height: MediaQuery.of(context).size.height *0.02,),
-            Container(
-                margin: EdgeInsets.all(5),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: [
-                    _editUserProfileButton,
-                  ],
-                )
-            ),
-          ],
-        ),
-      ),
-    );
 
      final _viewRecordingButton = Container(
        margin: EdgeInsets.all(5),
@@ -111,7 +143,8 @@ class _UserProfileState extends State<UserProfile> {
           //crossAxisAlignment: CrossAxisAlignment.center,
           //mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            _profileCard,
+            createProfileTopView(),
+            createButton(),
            SizedBox(height: MediaQuery.of(context).size.height *0.001,),
            _viewRecordingButton,
           ],
