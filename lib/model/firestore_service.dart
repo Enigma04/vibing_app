@@ -1,10 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:vibing_app/model/user.dart';
 class FirestoreService {
-  Firestore _db = Firestore.instance;
+  FirebaseFirestore _db = FirebaseFirestore.instance;
 
-  Future<void> saveUsers(User user) {
-    return _db.collection('user').document(user.userId).setData(user.toMap());
+  Future<void> saveUsers(AppUser user) {
+    return _db.collection('user').doc(user.userId).set(user.toMap());
   }
 
 

@@ -1,5 +1,6 @@
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:vibing_app/User_Login.dart';
@@ -60,9 +61,10 @@ class UserReg extends StatefulWidget {
 
       if(_validateAndSave()) {
         try {
-          String userId = await Auth().signUp(rEmail, rPass);
+          UserCredential user  = await FirebaseAuth.instance.createUserWithEmailAndPassword(email: rEmail, password: rPass);
+          String userId = user.toString();
           //FirestoreService().saveUsers(userId);
-          await Auth().sendEmailVerification();
+          //await Auth().sendEmailVerification();
           print('Registered! $userId, sent email verification');
           _formkey.currentState.reset();
 

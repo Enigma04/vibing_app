@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-class Settings extends StatelessWidget {
+class UserSettings extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return new Scaffold(

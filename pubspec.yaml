@@ -23,10 +23,10 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  firebase_core: ^0.4.0+9
-  firebase_auth: ^0.15.3 #
-  firebase_analytics: ^5.0.2
-  cloud_firestore: ^0.13.7
+  firebase_core: ^0.5.0
+  firebase_auth: ^0.18.0+1
+  firebase_analytics: ^6.0.0
+  cloud_firestore: ^0.14.0+2
   uuid: ^2.2.0
   provider: ^2.0.0
   flutter_tindercard: ^0.2.0

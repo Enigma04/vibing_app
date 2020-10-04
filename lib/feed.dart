@@ -54,7 +54,7 @@ int count = 0;
                 trailing: Icon(
                   Icons.supervised_user_circle,
                 ),
-                onTap: () {Navigator.push(context, MaterialPageRoute(builder:(context)=>UserProfile(userProfileId: Auth().getCurrentUser().toString())),);}
+                onTap: () {Navigator.push(context, MaterialPageRoute(builder:(context)=>UserProfile(userProfileId: FirebaseAuth.instance.currentUser.uid.toString())),);}
             ),
             ListTile(
               title: Text('Collaborations'),
@@ -68,7 +68,7 @@ int count = 0;
               trailing: Icon(
                 Icons.settings,
               ),
-              onTap: (){Navigator.push(context, MaterialPageRoute(builder:(context)=>Settings()),);},
+              onTap: (){Navigator.push(context, MaterialPageRoute(builder:(context)=>UserSettings()),);},
             ),
             ListTile(
               title: Text('Your Recordings'),
@@ -114,7 +114,7 @@ int count = 0;
         textAlign: TextAlign.center,),
       ),
       body: StreamBuilder(
-        stream:Firestore.instance.collection('user_posts').snapshots() ,
+        stream: FirebaseFirestore.instance.collection('user_posts').snapshots() ,
         builder:(context, snapshot){
           if(!snapshot.hasData)
             {
@@ -123,9 +123,9 @@ int count = 0;
               );
             }
             return ListView.builder(
-              itemCount: snapshot.data.documents.length ,
+              itemCount: snapshot.data.docs.length ,
                 itemBuilder: (context,index){
-                DocumentSnapshot myPost = snapshot.data.documents[index];
+                DocumentSnapshot myPost = snapshot.data.docs[index];
                 return Stack(
                 children: [
                   Column(
@@ -140,8 +140,8 @@ int count = 0;
                               children: <Widget>[
                                 ListTile(
                                   leading: Icon(Icons.supervised_user_circle),
-                                  title: Text('${myPost['user_name']}'),
-                                  subtitle: Text("${myPost['post']}"),
+                                  title: Text('${myPost.data()['user_name']}'),
+                                  subtitle: Text("${myPost.data()['post']}"),
 
                                 ),
                                 ButtonBar(

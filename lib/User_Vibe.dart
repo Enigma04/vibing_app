@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:uuid/uuid.dart';
 import 'package:vibing_app/model/auth.dart';
@@ -15,7 +16,7 @@ class UserVibe extends StatefulWidget {
 
 class _UserVibeState extends State<UserVibe> {
   String post;
-  static final user = Auth().getCurrentUser();
+    final user = FirebaseAuth.instance.currentUser.uid.toString();
   //Future<QuerySnapshot> userName =
   //var userName = User.;
   getPost(post){
@@ -23,14 +24,14 @@ class _UserVibeState extends State<UserVibe> {
   }
   final _formkey = GlobalKey<FormState>();
 
-  vibe()async{
-    DocumentReference ds = Firestore.instance.collection('user_posts').document(Timestamp.now().toDate().toIso8601String());
+  vibe(){
+    DocumentReference ds = FirebaseFirestore.instance.collection('user_posts').doc(Timestamp.now().toDate().toString());
     Map <String, dynamic> userPost={
       'post': post,
       'time': Timestamp.now().toDate(),
       'user_name': user,
     };
-     ds.setData(userPost).whenComplete(() => print("Posted!"));
+    ds.set(userPost).whenComplete(() => print("Posted!"));
   }
 
 

@@ -1,5 +1,7 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:provider/provider.dart';
 import 'package:vibing_app/edit_user_profile.dart';
 import 'main.dart';
 import 'package:vibing_app/model/auth.dart';
@@ -13,7 +15,8 @@ class UserProfile extends StatefulWidget {
 
 class _UserProfileState extends State<UserProfile> {
 
-  String currentUserId = Auth().getCurrentUser().toString();
+  String currentUserId = FirebaseAuth.instance.currentUser.uid.toString();
+  String get getCurrentId => widget.userProfileId;
 
 
   static final _profilePic = CircleAvatar(
@@ -26,12 +29,12 @@ class _UserProfileState extends State<UserProfile> {
 
   createProfileTopView() {
     return FutureBuilder(
-      future: Firestore.instance.collection('user').document(widget.userProfileId).get(),
-      builder: (context,dataSnapshot){
-        if(!dataSnapshot.hasData){
+      future: FirebaseFirestore.instance.collection('user').doc(widget.userProfileId).get(),
+      builder: (context,snapshot){
+        if(!snapshot.hasData){
           return CircularProgressIndicator();
         }
-        User user = User.fromDocument(dataSnapshot.data);
+        AppUser user = AppUser.fromDocument(snapshot.data);
         return Padding(
           padding: EdgeInsets.all(8),
           child: Column(
@@ -57,7 +60,7 @@ class _UserProfileState extends State<UserProfile> {
                         Container(
                           alignment: Alignment.centerLeft,
                           padding: EdgeInsets.only(top: 8),
-                          child: Text(user.userId),
+                          child: Text('${FirebaseAuth.instance.currentUser.email}'),
                         )
                       ],
                     ),
@@ -147,6 +150,8 @@ class _UserProfileState extends State<UserProfile> {
             createButton(),
            SizedBox(height: MediaQuery.of(context).size.height *0.001,),
            _viewRecordingButton,
+            SizedBox(height: MediaQuery.of(context).size.height *0.001,),
+            Text(widget.userProfileId),
           ],
         ),
       ),

@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:vibing_app/model/firestore_service.dart';
 import 'user.dart';
@@ -12,7 +13,7 @@ class UserProvider with ChangeNotifier{
   String _bio;
   int _age;
  // int _gender;
-  var uid = Auth().getCurrentUser();
+  var Uuid = FirebaseAuth.instance.currentUser.uid.toString();
   //Getters
 String get firstName => _firstName;
 String get lastName => _lastName;
@@ -43,10 +44,10 @@ changePassword(String value){
   notifyListeners();
 }
 
-saveUser()
-async{
-  var newUser = User(firstName: firstName, lastName: lastName, age: age, email: email, password: password, userId: await uid, bio: bio);
+saveUser() {
+  var newUser = AppUser(firstName: firstName, lastName: lastName, age: age, email: email, password: password, userId: Uuid, bio: bio);
   firestoreService.saveUsers(newUser);
   print("$firstName, $lastName, $age, $email, $password");
 }
+
 }

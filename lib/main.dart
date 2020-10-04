@@ -1,3 +1,4 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:vibing_app/User_Login.dart';
@@ -19,9 +20,10 @@ import 'splash.dart';
 import 'model/auth.dart';
 import 'package:vibing_app/model/user_provider.dart';
 import 'package:provider/provider.dart';
-void main()
+void main() async
 {
   WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
   runApp(MyApp());
 }
 
@@ -35,7 +37,7 @@ class MyApp extends StatelessWidget {
         title: 'Vibing',
         routes: {
           '/user_profile': (context)=> new UserProfile(),
-          '/settings':(context)=> new Settings(),
+          '/settings':(context)=> new UserSettings(),
           '/your_sound_recording':(context)=> new UserSoundRecordingList(),
           '/user_details':(context) => new UserDetails(),
           '/user_login':(context)=> new UserLogin(),
