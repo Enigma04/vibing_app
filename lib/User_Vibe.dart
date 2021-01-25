@@ -16,7 +16,7 @@ class UserVibe extends StatefulWidget {
 
 class _UserVibeState extends State<UserVibe> {
   String post;
-    final user = FirebaseAuth.instance.currentUser.uid.toString();
+    User user = FirebaseAuth.instance.currentUser;
   //Future<QuerySnapshot> userName =
   //var userName = User.;
   getPost(post){
@@ -29,7 +29,7 @@ class _UserVibeState extends State<UserVibe> {
     Map <String, dynamic> userPost={
       'post': post,
       'time': Timestamp.now().toDate(),
-      'user_name': user,
+      'user_name': user.displayName,
     };
     ds.set(userPost).whenComplete(() => print("Posted!"));
   }

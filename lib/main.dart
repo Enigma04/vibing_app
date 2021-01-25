@@ -19,7 +19,7 @@ import 'root_page.dart';
 import 'splash.dart';
 import 'model/auth.dart';
 import 'package:vibing_app/model/user_provider.dart';
-import 'package:provider/provider.dart';
+//import 'package:provider/provider.dart';
 void main() async
 {
   WidgetsFlutterBinding.ensureInitialized();
@@ -31,17 +31,15 @@ void main() async
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider(
-      builder: (context)=> UserProvider(),
-      child: MaterialApp(
+    return MaterialApp(
         title: 'Vibing',
         routes: {
-          '/user_profile': (context)=> new UserProfile(),
+          //'/user_profile': (context)=> new UserProfile(),
           '/settings':(context)=> new UserSettings(),
           '/your_sound_recording':(context)=> new UserSoundRecordingList(),
-          '/user_details':(context) => new UserDetails(),
+          //'/user_details':(context) => new UserDetails(),
           '/user_login':(context)=> new UserLogin(),
-          '/user_register':(context)=> new UserReg(),
+          //'/user_register':(context)=> new UserReg(),
           '/forgot_password':(context)=> new ForgotPass(),
           '/post_collaborations':(context)=> new PostCollaborations(),
           '/collab_requests':(context)=> new CollabReq(),
@@ -50,7 +48,6 @@ class MyApp extends StatelessWidget {
           '/vibe': (context)=> new UserVibe(),
         },
         home: UserLogin(auth: new Auth()),
-      ),
     );
   }
 }

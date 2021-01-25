@@ -2,14 +2,14 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 class AppUser {
 
-  final String firstName;
-  final String lastName;
-  final String userId;
-  final String email;
-  final String password;
-  final int age;
+  String firstName;
+  String lastName;
+  String userId;
+  String email;
+  String password;
+  int age;
   //final int gender;
-  final String bio;
+  String bio;
 
   AppUser({this.userId, this.firstName, this.lastName,this.email,this.password, this.age, this.bio});
 
@@ -30,7 +30,7 @@ class AppUser {
 
   factory AppUser.fromDocument(DocumentSnapshot docu){
     return AppUser(
-      userId: docu.id,
+      userId: docu.data()['uid'],
       firstName: docu.data()['first_name'],
       lastName: docu.data()['last_name'],
       email: docu.data()['email'],
@@ -39,6 +39,8 @@ class AppUser {
 
     );
   }
+  
+
 
 
 

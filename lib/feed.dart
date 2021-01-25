@@ -2,6 +2,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:vibing_app/Profile_practice.dart';
 import 'package:vibing_app/model/auth.dart';
 import 'package:vibing_app/User_Login.dart';
 import 'package:vibing_app/collaboration.dart';
@@ -54,7 +55,10 @@ int count = 0;
                 trailing: Icon(
                   Icons.supervised_user_circle,
                 ),
-                onTap: () {Navigator.push(context, MaterialPageRoute(builder:(context)=>UserProfile(userProfileId: FirebaseAuth.instance.currentUser.uid.toString())),);}
+                onTap: () {
+                  //Navigator.push(context, MaterialPageRoute(builder:(context)=>UserProfile(userProfileId: FirebaseAuth.instance.currentUser.uid)),);
+                  Navigator.push(context, MaterialPageRoute(builder: (context)=>PracticeProfile()));
+                }
             ),
             ListTile(
               title: Text('Collaborations'),
@@ -84,11 +88,12 @@ int count = 0;
                 ),
                 onTap: () async{
                   try{
-                    String user = await Auth().getCurrentUser();
-                    await Auth().signOut().then((value){
-                      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>UserLogin()));
-                    });
-                    print("Signed user $user out successfully!");
+                     String user =  await Auth().getCurrentUser();
+                     await Auth().signOut().then((value){
+                       Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>UserLogin()));
+                       print("Signed $user out successfully!");
+                     });
+
                   }
                   catch(e)
                   {
@@ -114,7 +119,7 @@ int count = 0;
         textAlign: TextAlign.center,),
       ),
       body: StreamBuilder(
-        stream: FirebaseFirestore.instance.collection('user_posts').snapshots() ,
+        stream: FirebaseFirestore.instance.collection('user_posts').orderBy("time",descending: true).snapshots() ,
         builder:(context, snapshot){
           if(!snapshot.hasData)
             {

@@ -28,7 +28,7 @@ dependencies:
   firebase_analytics: ^6.0.0
   cloud_firestore: ^0.14.0+2
   uuid: ^2.2.0
-  provider: ^2.0.0
+  #provider: ^2.0.0
   flutter_tindercard: ^0.2.0
 
   # The following adds the Cupertino Icons font to your application.

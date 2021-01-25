@@ -2,7 +2,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
+//import 'package:provider/provider.dart';
 import 'package:vibing_app/User_Login.dart';
 import 'package:vibing_app/User_Profile.dart';
 import 'package:vibing_app/model/firestore_service.dart';
@@ -11,12 +11,172 @@ import 'package:vibing_app/model/database.dart';
 import 'package:vibing_app/model/user_provider.dart';
 import 'model/auth.dart';
 import 'package:vibing_app/feed.dart';
+import 'model/user.dart';
 
-class UserReg extends StatefulWidget {
-  UserReg({this.auth, this.rEmail,this.rPass});
+class UserReg extends StatelessWidget {
+  final UserProvider newUser;
   final BaseAuth auth;
-  String rEmail;
-  String rPass;
+  UserReg({Key key, @required this.newUser, this.auth}): super(key: key);
+  final _formkey = GlobalKey<FormState>();
+  @override
+  Widget build(BuildContext context) {
+
+    TextEditingController _rEmailController = new TextEditingController();
+    TextEditingController _rPasswordController = new TextEditingController();
+    _rEmailController.text = newUser.email;
+    _rPasswordController.text = newUser.password;
+
+    bool _validateAndSave()
+    {
+      final form = _formkey.currentState;
+      if(form.validate())
+      {
+        form.save();
+        return true;
+      }
+      return false;
+    }
+
+    void _validateAndSubmit() async
+    {
+
+      if(_validateAndSave()) {
+        try {
+          newUser.email = _rEmailController.text;
+          newUser.password = _rPasswordController.text;
+          UserCredential user  = await FirebaseAuth.instance.createUserWithEmailAndPassword(email: newUser.email , password: newUser.password);
+          String userId = user.toString();
+          user.user.updateProfile(displayName: newUser.firstName + " " +newUser.lastName);
+          final String userUID = FirebaseAuth.instance.currentUser.uid;
+          //final uid = users.uid;
+          FirebaseFirestore.instance.collection('user').doc(userUID).collection('user Info').add(newUser.toMap());
+          await Auth().sendEmailVerification();
+          print('Registered! $userId, sent email verification');
+        }
+        catch (e) {
+          print('Error: $e');
+        }
+      }
+
+    }
+
+    final _regEmail = Container(
+      padding: EdgeInsets.only(left: 10, right: 10),
+      child: TextFormField(
+        controller: _rEmailController,
+        keyboardType: TextInputType.emailAddress,
+        autofocus: false,
+        validator: (value){
+          if(value.isEmpty)
+            return 'Field cannot be empty';
+          else if(!value.contains('@'))
+            return 'Enter valid email id';
+          else
+            return null;
+        },
+        decoration: InputDecoration(
+          hintText: 'Enter Email Address',
+          border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(10)
+          ),
+        ),
+      ),
+    );
+
+
+    final _regpass = Container(
+      padding: EdgeInsets.only(left: 10, right: 10),
+      child: TextFormField(
+        controller:  _rPasswordController,
+        obscureText: true,
+        autofocus: false,
+        validator: (value){
+          if(value.length <= 6)
+            return "Character should be greater than 5";
+          else if(value.isEmpty)
+            return "Field cannot be empty";
+          else
+            return null;
+        },
+        decoration: InputDecoration(
+          hintText: 'Enter password',
+          border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(10)
+          ),
+        ),
+      ),
+    );
+
+    return new Scaffold(
+      resizeToAvoidBottomInset: false,
+      backgroundColor: Colors.yellow,
+      body: Container(
+        height: MediaQuery.of(context).size.height,
+        child: Form(
+          key: _formkey,
+          child: Column(
+            crossAxisAlignment:  CrossAxisAlignment.center,
+            children: <Widget>[
+              SizedBox(height: MediaQuery.of(context).size.height *0.2,),
+              Text('Register',
+                style:TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 64,
+                ),
+              ),
+              SizedBox(height: MediaQuery.of(context).size.height * 0.06,),
+              _regEmail,
+              SizedBox(height: MediaQuery.of(context).size.height * 0.03,),
+              _regpass,
+              SizedBox(height:MediaQuery.of(context).size.height * 0.03),
+              //_confPass,
+              //SizedBox(height: MediaQuery.of(context).size.height * 0.03,),
+              FloatingActionButton.extended(
+                  heroTag: "Register_Button",
+                  backgroundColor: Colors.yellow,
+                  foregroundColor: Colors.black,
+                  onPressed:  (){
+                    //userProvider.saveUser();
+                    _validateAndSubmit();
+                    _formkey.currentState.reset();
+                    Navigator.popUntil(context, (route) => route.isFirst);
+                  },
+                  label: Text("Register", style: TextStyle(fontWeight: FontWeight.bold),)
+              ),
+
+              SizedBox(height: MediaQuery.of(context).size.height * 0.02,),
+              FlatButton(
+                child: Text('Already Registered? Sign in!'),
+                onPressed: ()=> Navigator.popUntil(context, (route) => route.isFirst),
+              ),
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: <Widget>[
+                  FloatingActionButton.extended(
+                      heroTag: "prev_button1",
+                      backgroundColor: Colors.yellow,
+                      foregroundColor: Colors.black,
+                      onPressed:  ()=>  Navigator.pop(context),
+                      label: Text("Prev", style: TextStyle(fontWeight: FontWeight.bold),)
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+/*
+class UserReg extends StatefulWidget {
+  final AppUser user;
+  UserReg({Key key, @required this.user, this.auth}): super(key: key);
+  //UserReg({this.auth, this.rEmail,this.rPass});
+  final BaseAuth auth;
+  //String rEmail;
+  //String rPass;
   @override
   State<StatefulWidget> createState() => _UserRegState();
 }
@@ -90,8 +250,6 @@ class UserReg extends StatefulWidget {
 
   @override
   Widget build(BuildContext context) {
-    final userProvider = Provider.of<UserProvider>(context);
-
     final _regEmail = Container(
       padding: EdgeInsets.only(left: 10, right: 10),
       child: TextFormField(
@@ -107,10 +265,10 @@ class UserReg extends StatefulWidget {
           return null;
         },
         onChanged: (value){
-          userProvider.changeEmail(value);
+         //userProvider.changeEmail(value);
         },
 
-        onSaved: (value)=> rEmail = value,
+        onSaved: (value)=> user.email = value,
         decoration: InputDecoration(
           hintText: 'Enter Email Address',
           border: OutlineInputBorder(
@@ -128,11 +286,11 @@ class UserReg extends StatefulWidget {
         autofocus: false,
         validator: pwdValidator,
         onChanged: (value){
-          userProvider.changePassword(value);
-          rPass = value;
+          //userProvider.changePassword(value);
+          //rPass = value;
         },
 
-        onSaved: (value)=> rPass = value,
+        onSaved: (value)=> user.password = value,
         decoration: InputDecoration(
           hintText: 'Enter password',
           border: OutlineInputBorder(
@@ -156,7 +314,7 @@ class UserReg extends StatefulWidget {
         },
 
         onChanged: (value){
-          userProvider.changePassword(value);
+          //userProvider.changePassword(value);
         },
 
         onSaved: (value)=> rPass = value,
@@ -198,7 +356,7 @@ class UserReg extends StatefulWidget {
                   backgroundColor: Colors.yellow,
                   foregroundColor: Colors.black,
                   onPressed:  (){
-                    userProvider.saveUser();
+                    //userProvider.saveUser();
                     _validateAndSubmit();
                     Navigator.pushReplacementNamed(context, '/user_login');
                   },
@@ -217,7 +375,7 @@ class UserReg extends StatefulWidget {
                       heroTag: "prev_button1",
                       backgroundColor: Colors.yellow,
                       foregroundColor: Colors.black,
-                      onPressed:  ()=>  Navigator.pop(context),  //Navigator.push(context, MaterialPageRoute(builder: (context)=>UserDetails())),
+                      onPressed:  ()=>  Navigator.popUntil(context, (route) => route.isFirst),
                       label: Text("Prev", style: TextStyle(fontWeight: FontWeight.bold),)
                   ),
                 ],
@@ -229,3 +387,5 @@ class UserReg extends StatefulWidget {
     );
   }
 }
+
+ */

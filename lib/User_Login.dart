@@ -12,7 +12,9 @@ import 'package:vibing_app/user_details_registeration.dart';
 import 'package:vibing_app/your_sound_recording_list.dart';
 import 'User_Profile.dart';
 import 'model/auth.dart';
+import 'model/user_provider.dart';
 import 'root_page.dart';
+import 'model/user.dart';
 
 
 class UserLogin extends StatefulWidget {
@@ -29,7 +31,7 @@ class UserLogin extends StatefulWidget {
 
 class _UserLoginState extends State<UserLogin> {
 
-  GlobalKey<FormState> _formkey_forgot_pass = GlobalKey<FormState>();
+  GlobalKey<FormState> _formkey = GlobalKey<FormState>();
 
   static String emailValidator(String value) {
     Pattern pattern =
@@ -44,7 +46,7 @@ class _UserLoginState extends State<UserLogin> {
 
   bool _validateAndSave()
   {
-    final form = _formkey_forgot_pass.currentState;
+    final form = _formkey.currentState;
     if(form.validate())
       {
         form.save();
@@ -66,9 +68,9 @@ class _UserLoginState extends State<UserLogin> {
        try {
          String userId = await Auth().signIn(emailid, password);
          print('Signed in! $userId');
-         _formkey_forgot_pass.currentState.reset();
+         _formkey.currentState.reset();
          //widget.onSignedIn();
-         Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>Feed()));
+         Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>Feed(auth:new Auth(),)));
        }
        catch (e) {
          print('Error: $e');
@@ -142,6 +144,7 @@ class _UserLoginState extends State<UserLogin> {
 
   @override
   Widget build(BuildContext context) {
+    final user = new UserProvider(null, null, null, null, null, null,null);
     return new Scaffold(
       resizeToAvoidBottomInset: false,
       backgroundColor: Colors.yellow,
@@ -149,7 +152,7 @@ class _UserLoginState extends State<UserLogin> {
         width: MediaQuery.of(context).size.width,
         height: MediaQuery.of(context).size.height,
         child: Form(
-          key: _formkey_forgot_pass,
+          key: _formkey,
           child: Column(
             children: <Widget>[
               SizedBox(height: MediaQuery.of(context).size.height * 0.2,),
@@ -183,7 +186,7 @@ class _UserLoginState extends State<UserLogin> {
               SizedBox(height:MediaQuery.of(context).size.height * 0.02),
               FlatButton(
                   child: Text('New? Register here!'),
-                  onPressed: ()=> Navigator.pushNamed(context,'/user_details'),
+                  onPressed: ()=> Navigator.push(context, MaterialPageRoute(builder: (context)=> UserDetails(newUser: user,)))
               ),
             ],
           ),
