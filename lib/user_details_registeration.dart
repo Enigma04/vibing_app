@@ -13,9 +13,15 @@ enum Gender{
   Male, Female, Others
 }
 
-class UserDetails extends StatelessWidget {
+class UserDetails extends StatefulWidget {
   final UserProvider newUser;
   UserDetails({Key key, @required this.newUser,}): super(key: key);
+
+  @override
+  _UserDetailsState createState() => _UserDetailsState();
+}
+
+class _UserDetailsState extends State<UserDetails> {
   final formkeyDetails = GlobalKey<FormState>();
 
   @override
@@ -23,9 +29,9 @@ class UserDetails extends StatelessWidget {
     TextEditingController _firstNameController = new TextEditingController();
     TextEditingController _lastNameController = new TextEditingController();
     TextEditingController _ageController = new TextEditingController();
-    _firstNameController.text = newUser.firstName;
-    _lastNameController.text = newUser.lastName;
-    _ageController.text = newUser.age;
+    _firstNameController.text = widget.newUser.firstName;
+    _lastNameController.text = widget.newUser.lastName;
+    _ageController.text = widget.newUser.age;
 
     void _validateAndSave()
     {
@@ -33,9 +39,9 @@ class UserDetails extends StatelessWidget {
       if(form.validate())
       {
         form.save();
-        newUser.firstName = _firstNameController.text;
-        newUser.lastName = _lastNameController.text;
-        newUser.age = _ageController.text;
+        widget.newUser.firstName = _firstNameController.text;
+        widget.newUser.lastName = _lastNameController.text;
+        widget.newUser.age = _ageController.text;
       }
       return null;
     }
@@ -152,7 +158,7 @@ class UserDetails extends StatelessWidget {
                       onPressed: () async{
                         //String userid = await Auth().getCurrentUser();
                         _validateAndSave();
-                        Navigator.push(context, MaterialPageRoute(builder: (context)=> UserReg(newUser: newUser))).then((value) => formkeyDetails.currentState.reset());
+                        Navigator.push(context, MaterialPageRoute(builder: (context)=> UserReg(newUser: widget.newUser))).then((value) => formkeyDetails.currentState.reset());
                       },
                       label: Text("Next", style: TextStyle(fontWeight: FontWeight.bold),)
                   ),

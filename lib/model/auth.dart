@@ -8,11 +8,12 @@ abstract class BaseAuth {
   Future getCurrentUser();
   Future<void> sendEmailVerification();
   Future<void> signOut();
- // Future<bool> isEmailVerified();
+  // Future<bool> isEmailVerified();
   Future<void> resetPassword(String email);
 }
 
 class Auth extends BaseAuth {
+
   final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
 
   Future<String> signIn(String email, String password) async {

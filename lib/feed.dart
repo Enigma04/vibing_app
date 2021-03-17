@@ -6,34 +6,24 @@ import 'package:vibing_app/Profile_practice.dart';
 import 'package:vibing_app/model/auth.dart';
 import 'package:vibing_app/User_Login.dart';
 import 'package:vibing_app/collaboration.dart';
+import 'package:vibing_app/search.dart';
 import 'package:vibing_app/your_sound_recording_list.dart';
 import 'package:vibing_app/settings.dart';
 import 'package:vibing_app/User_Profile.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'User_Vibe.dart';
 
-class Feed extends StatelessWidget {
-  Feed({this.auth, this.onSignedOut});
+class Feed extends StatefulWidget {
+  Feed({this.auth, this.onSignedOut,this.otherUsers});
   final BaseAuth auth;
   final VoidCallback onSignedOut;
+  final User otherUsers;
 
+  @override
+  _FeedState createState() => _FeedState();
+}
 
-  
-/*
-  void _signOut() async {
-    try{
-
-      await Auth().signOut();
-      print('signed out!');
-      //onSignedOut();
-    }
-    catch(e){
-      print(e);
-    }
-
-  }
-
- */
+class _FeedState extends State<Feed> {
 int count = 0;
 
   @override
@@ -44,8 +34,17 @@ int count = 0;
           padding: EdgeInsets.zero,
           children: <Widget>[
             DrawerHeader(
-              child: Text('Profile') ,
+              child: Column(
+                children: [
+                  CircleAvatar(
+                    radius: 40,
+                    backgroundImage: (FirebaseAuth.instance.currentUser.photoURL != null)? Image.network(FirebaseAuth.instance.currentUser.photoURL).image: Image.network("https://t4.ftcdn.net/jpg/03/32/59/65/360_F_332596535_lAdLhf6KzbW6PWXBWeIFTovTii1drkbT.jpg").image,
+                  ),
+                  Text('${FirebaseAuth.instance.currentUser.displayName}'),
+                ],
+              ) ,
               decoration: BoxDecoration(
+
 
                 color:Colors.yellow,
               ),
@@ -55,9 +54,10 @@ int count = 0;
                 trailing: Icon(
                   Icons.supervised_user_circle,
                 ),
-                onTap: () {
+                onTap: () async {
                   //Navigator.push(context, MaterialPageRoute(builder:(context)=>UserProfile(userProfileId: FirebaseAuth.instance.currentUser.uid)),);
-                  Navigator.push(context, MaterialPageRoute(builder: (context)=>PracticeProfile()));
+                  //showUserProfile(context);
+                  await Navigator.push(context, MaterialPageRoute(builder: (context)=>PracticeProfile(profileId: FirebaseAuth.instance.currentUser?.uid,) ));
                 }
             ),
             ListTile(
@@ -88,10 +88,10 @@ int count = 0;
                 ),
                 onTap: () async{
                   try{
-                     String user =  await Auth().getCurrentUser();
+                     User user =  await Auth().getCurrentUser();
                      await Auth().signOut().then((value){
                        Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>UserLogin()));
-                       print("Signed $user out successfully!");
+                       print("Signed ${user.displayName} out successfully!");
                      });
 
                   }
@@ -117,6 +117,11 @@ int count = 0;
         title: Text('Feed',
         style: TextStyle(fontWeight: FontWeight.bold),
         textAlign: TextAlign.center,),
+        actions: [
+          IconButton(icon: Icon(Icons.search,
+            color: Colors.white,),
+            onPressed: ()=> Navigator.push(context, MaterialPageRoute(builder: (context)=> UserSearch()))),
+        ],
       ),
       body: StreamBuilder(
         stream: FirebaseFirestore.instance.collection('user_posts').orderBy("time",descending: true).snapshots() ,
@@ -144,7 +149,10 @@ int count = 0;
                             child: Column(
                               children: <Widget>[
                                 ListTile(
-                                  leading: Icon(Icons.supervised_user_circle),
+                                  leading: CircleAvatar(
+                                    radius: 30,
+                                    backgroundImage:(myPost.data()['photourl'] != null)? Image.network(myPost.data()['photourl']).image: Image.network("https://t4.ftcdn.net/jpg/03/32/59/65/360_F_332596535_lAdLhf6KzbW6PWXBWeIFTovTii1drkbT.jpg").image,
+                                  ),
                                   title: Text('${myPost.data()['user_name']}'),
                                   subtitle: Text("${myPost.data()['post']}"),
 
@@ -197,5 +205,10 @@ int count = 0;
               ),
             );
   }
+}
+
+showUserProfile(BuildContext context, {String profileID})
+{
+  Navigator.push(context, MaterialPageRoute(builder: (context)=> PracticeProfile(profileId: profileID,)));
 }
 

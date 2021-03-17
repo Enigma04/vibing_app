@@ -27,7 +27,8 @@ apply from: "$flutterRoot/packages/flutter_tools/gradle/flutter.gradle"
 
 android {
     compileSdkVersion 29
-
+    //ndkVersion '21.0.6113669'
+    ndkVersion '22.0.7026061'
     sourceSets {
         main.java.srcDirs += 'src/main/kotlin'
     }
@@ -43,7 +44,6 @@ android {
         targetSdkVersion 29
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
-        ndkVersion '21.3.6528147'
         multiDexEnabled true
     }
 

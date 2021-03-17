@@ -47,7 +47,7 @@ class MyApp extends StatelessWidget {
           '/edit_user_profile': (context) => new EditProfile(),
           '/vibe': (context)=> new UserVibe(),
         },
-        home: UserLogin(auth: new Auth()),
+        home: UserLogin(auth: Auth(),),
     );
   }
 }

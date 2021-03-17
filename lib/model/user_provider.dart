@@ -13,10 +13,10 @@ class UserProvider{
    String password;
    String bio;
    String age;
-  int _gender;
-  var uid = FirebaseAuth.instance.currentUser.uid.toString();
+   int _gender;
+  //String uid = FirebaseAuth.instance.currentUser.uid;
   //Getters
-UserProvider(this.firstName, this.lastName, this.email, this.password, this.age, this.bio, this.uid);
+UserProvider(this.firstName, this.lastName, this.email, this.password, this.age,);
 
 /*
 saveUser() {
@@ -28,18 +28,22 @@ saveUser() {
  */
   Map<String,dynamic> toMap() {
     return {
-      'userId' : uid,
+      'userId' : FirebaseAuth.instance.currentUser.uid,
+      'full_name': firstName + " "+ lastName,
       'first_name': firstName,
       'last_name': lastName,
       'emailid': email,
       'password': password,
       'age': age,
-      'bio': bio,
+      'bio': "",
+      'followers': 0,
+      'following': 0,
+      'profilePicture': (FirebaseAuth.instance.currentUser.photoURL != null)? FirebaseAuth.instance.currentUser.photoURL: 'https://t4.ftcdn.net/jpg/03/32/59/65/360_F_332596535_lAdLhf6KzbW6PWXBWeIFTovTii1drkbT.jpg'
       //'gender' : gender,
     };
   }
 
-/*
+  /*
   factory UserProvider.fromDocument(DocumentSnapshot docu){
     return UserProvider(
       uid: docu.data()['uid'],
@@ -48,11 +52,10 @@ saveUser() {
       email: docu.data()['email'],
       age: docu.data()['age'],
       bio: docu.data()['bio'],
-
     );
   }
 
- */
+   */
 
 
 }

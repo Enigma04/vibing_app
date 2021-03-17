@@ -144,7 +144,7 @@ class _UserLoginState extends State<UserLogin> {
 
   @override
   Widget build(BuildContext context) {
-    final user = new UserProvider(null, null, null, null, null, null,null);
+    final user = new UserProvider(null, null, null,null,null);
     return new Scaffold(
       resizeToAvoidBottomInset: false,
       backgroundColor: Colors.yellow,

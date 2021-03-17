@@ -36,10 +36,6 @@ class _UserProfileState extends State<UserProfile> {
   String firstName = names[0];
   String lastName = names[1];
   final uid = Auth().getCurrentUserUID().toString();
-  Stream<QueryDocumentSnapshot> displayUserInfo(BuildContext context) async* {
-    final uid = await Provider.of(context).auth.getCurrentUserUID();
-    yield* FirebaseFirestore.instance.collection('user').doc(uid).collection('user info').doc().snapshots();
-  }
   //FirebaseFirestore.instance.collection('user').doc(currentUserId).collection('user info').doc().get();
 
   createProfileTopView() {

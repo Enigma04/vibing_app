@@ -46,10 +46,12 @@ class UserReg extends StatelessWidget {
           newUser.password = _rPasswordController.text;
           UserCredential user  = await FirebaseAuth.instance.createUserWithEmailAndPassword(email: newUser.email , password: newUser.password);
           String userId = user.toString();
-          user.user.updateProfile(displayName: newUser.firstName + " " +newUser.lastName);
+          user.user.updateProfile(displayName: newUser.firstName+ " " +newUser.lastName);
           final String userUID = FirebaseAuth.instance.currentUser.uid;
           //final uid = users.uid;
           FirebaseFirestore.instance.collection('user').doc(userUID).collection('user Info').add(newUser.toMap());
+          FirebaseFirestore.instance.collection('user search').doc(userUID).set(newUser.toMap());
+          //FirebaseFirestore.instance.collection('user').doc(newUser.firstName + " " +newUser.lastName).collection('user Info').add(newUser.toMap());
           await Auth().sendEmailVerification();
           print('Registered! $userId, sent email verification');
         }

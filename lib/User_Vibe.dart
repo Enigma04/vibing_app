@@ -26,12 +26,15 @@ class _UserVibeState extends State<UserVibe> {
 
   vibe(){
     DocumentReference ds = FirebaseFirestore.instance.collection('user_posts').doc(Timestamp.now().toDate().toString());
+    DocumentReference ds1 = FirebaseFirestore.instance.collection('user').doc(user.uid).collection('post').doc(Timestamp.now().toDate().toString());
     Map <String, dynamic> userPost={
       'post': post,
       'time': Timestamp.now().toDate(),
       'user_name': user.displayName,
+      'photourl' : user.photoURL,
     };
     ds.set(userPost).whenComplete(() => print("Posted!"));
+    ds1.set(userPost).whenComplete(() => print("Saved in user's personal file"));
   }
 
 
