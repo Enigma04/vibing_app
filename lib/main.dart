@@ -1,6 +1,7 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:vibing_app/User_Login.dart';
 import 'package:vibing_app/User_Profile.dart';
 import 'package:vibing_app/User_Vibe.dart';
@@ -11,9 +12,8 @@ import 'package:vibing_app/post_collaborations.dart';
 import 'package:vibing_app/register_user.dart';
 import 'package:vibing_app/edit_user_profile.dart';
 import 'package:vibing_app/settings.dart';
-import 'package:vibing_app/side_menu.dart';
 import 'package:vibing_app/user_details_registeration.dart';
-import 'package:vibing_app/view_collaboration_requests.dart';
+import 'package:vibing_app/Collaborate.dart';
 import 'package:vibing_app/your_sound_recording_list.dart';
 import 'root_page.dart';
 import 'splash.dart';
@@ -22,9 +22,10 @@ import 'package:vibing_app/model/user_provider.dart';
 //import 'package:provider/provider.dart';
 void main() async
 {
+  
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
-  runApp(MyApp());
+  SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]).then((value) => runApp(MyApp()));
 }
 
 
@@ -32,6 +33,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
         title: 'Vibing',
         routes: {
           //'/user_profile': (context)=> new UserProfile(),
@@ -42,7 +44,7 @@ class MyApp extends StatelessWidget {
           //'/user_register':(context)=> new UserReg(),
           '/forgot_password':(context)=> new ForgotPass(),
           '/post_collaborations':(context)=> new PostCollaborations(),
-          '/collab_requests':(context)=> new CollabReq(),
+          '/collab':(context)=> new Collaborate(),
           '/feed': (context) => new Feed(),
           '/edit_user_profile': (context) => new EditProfile(),
           '/vibe': (context)=> new UserVibe(),

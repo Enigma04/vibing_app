@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:vibing_app/feed.dart';
 import 'package:vibing_app/model/user.dart';
 
-import 'Profile_practice.dart';
+import 'User_Profile.dart';
 
 class UserSearch extends StatefulWidget {
   @override
@@ -20,7 +20,7 @@ class _UserSearchState extends State<UserSearch> {
 
   handleSearch(String query)
   {
-    Future<QuerySnapshot> users = userRef.where("full_name", isGreaterThanOrEqualTo: query).get();
+    Future<QuerySnapshot> users = userRef.where("full_name".toLowerCase(), isGreaterThanOrEqualTo: query).get();
     setState(() {
       searchResults = users;
     });

@@ -8,10 +8,12 @@ import 'package:vibing_app/register_user.dart';
 import 'package:vibing_app/model/user_provider.dart';
 import 'model/user.dart';
 
-
+/*
 enum Gender{
   Male, Female, Others
 }
+
+ */
 
 class UserDetails extends StatefulWidget {
   final UserProvider newUser;
@@ -23,15 +25,14 @@ class UserDetails extends StatefulWidget {
 
 class _UserDetailsState extends State<UserDetails> {
   final formkeyDetails = GlobalKey<FormState>();
+  TextEditingController _firstNameController = new TextEditingController();
+  TextEditingController _lastNameController = new TextEditingController();
 
   @override
   Widget build(BuildContext context) {
-    TextEditingController _firstNameController = new TextEditingController();
-    TextEditingController _lastNameController = new TextEditingController();
-    TextEditingController _ageController = new TextEditingController();
+
     _firstNameController.text = widget.newUser.firstName;
     _lastNameController.text = widget.newUser.lastName;
-    _ageController.text = widget.newUser.age;
 
     void _validateAndSave()
     {
@@ -41,13 +42,10 @@ class _UserDetailsState extends State<UserDetails> {
         form.save();
         widget.newUser.firstName = _firstNameController.text;
         widget.newUser.lastName = _lastNameController.text;
-        widget.newUser.age = _ageController.text;
       }
       return null;
     }
 
-    int group_value = -1;
-    Gender _gender = Gender.Male;
 
     final _firstName = Container(
       padding: EdgeInsets.only(left: 10, right: 10),
@@ -93,7 +91,7 @@ class _UserDetailsState extends State<UserDetails> {
       ),
     );
 
-
+/*
     final _userAge = Container(
       padding: EdgeInsets.only(left: 10, right: 10),
       child: TextFormField(
@@ -117,6 +115,8 @@ class _UserDetailsState extends State<UserDetails> {
       ),
     );
 
+ */
+
 
 
     return Scaffold(
@@ -134,8 +134,7 @@ class _UserDetailsState extends State<UserDetails> {
               _firstName,
               SizedBox(height: MediaQuery.of(context).size.height * 0.02,),
               _lastName,
-              SizedBox(height: MediaQuery.of(context).size.height * 0.02,),
-              _userAge,
+
               SizedBox(height: MediaQuery.of(context).size.height * 0.02,),
 
               SizedBox(height: MediaQuery.of(context).size.height * 0.02,),

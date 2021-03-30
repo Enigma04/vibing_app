@@ -1,36 +1,48 @@
 import 'package:flutter/material.dart';
 import 'package:vibing_app/post_collaborations.dart';
-import 'package:vibing_app/view_collaboration_requests.dart';
+import 'package:vibing_app/Collaborate.dart';
 class Collaboration extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Colors.yellow,
-        title: Text("Collaboration", style: TextStyle(fontWeight: FontWeight.bold),),
-      ),
+      backgroundColor: Colors.yellow,
       body: new Container(
         alignment: AlignmentDirectional.center,
           child: new Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
-              new RaisedButton(
+              IconButton(icon: Icon(Icons.arrow_back_ios), onPressed: ()=> Navigator.pop(context), iconSize: 30,),
+              SizedBox(height: 20,),
+              Text("Collaboration", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 60,),),
+              SizedBox(height: MediaQuery.of(context).size.height*0.05,),
+              new FlatButton(
+                minWidth: 400,
+                height: 50,
+                child: Text('Post a collaboration', style: TextStyle(color: Colors.yellow, fontWeight: FontWeight.bold, fontSize: 22),),
+                color: Colors.white,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10),
+                    side: BorderSide(color: Colors.black)
+                ),
 
-                child: Text('Post a collaboration'),
-                color: Colors.yellow,
                 onPressed: (){
                   Navigator.pushNamed(context, '/post_collaborations');
                 },
-                elevation: 5 ,
               ),
-              new RaisedButton(
-                child: Text('Your Collaborations'),
-                color: Colors.yellow,
+              SizedBox(height: MediaQuery.of(context).size.height*0.01,),
+              new FlatButton(
+                minWidth: 400,
+                height: 50,
+                child: Text('View Bulletin Board', style: TextStyle(color: Colors.yellow, fontWeight: FontWeight.bold, fontSize: 22),),
+                color: Colors.white,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10),
+                  side: BorderSide(color: Colors.black)
+                ),
                 onPressed: (){
-                  Navigator.pushNamed(context, '/collab_requests');
+                  Navigator.pushNamed(context, '/collab');
                 },
-                elevation: 5 ,
-              )
+              ),
             ],
           )
       ),

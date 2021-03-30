@@ -9,6 +9,7 @@ import 'package:vibing_app/forgot_password.dart';
 import 'package:vibing_app/main.dart';
 import 'package:vibing_app/settings.dart';
 import 'package:vibing_app/user_details_registeration.dart';
+import 'package:vibing_app/verification_screen.dart';
 import 'package:vibing_app/your_sound_recording_list.dart';
 import 'User_Profile.dart';
 import 'model/auth.dart';
@@ -56,21 +57,18 @@ class _UserLoginState extends State<UserLogin> {
       return false;
   }
 
-   static final incorrect_icon = Icon(
-     Icons.error,
-     color: Colors.pink,
-   );
-
    void _validateAndSubmit() async
    {
-
      if(_validateAndSave()) {
        try {
-         String userId = await Auth().signIn(emailid, password);
+         String userId = await Auth().signIn(emailid, password).then((value) =>
+             Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>Feed(auth:new Auth(),)))
+          // Navigator.push(context, MaterialPageRoute(builder: (context)=> VerficationScreen()))
+         );
          print('Signed in! $userId');
          _formkey.currentState.reset();
          //widget.onSignedIn();
-         Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>Feed(auth:new Auth(),)));
+         
        }
        catch (e) {
          print('Error: $e');
@@ -168,7 +166,6 @@ class _UserLoginState extends State<UserLogin> {
               _pass,
               SizedBox(height:MediaQuery.of(context).size.height * 0.03),
               RaisedButton(
-
                   color: Colors.yellow,
                   elevation: 5,
                   child: Text('Login'),

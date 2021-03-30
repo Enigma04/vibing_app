@@ -26,7 +26,9 @@ class _EditProfileState extends State<EditProfile> {
   void initstate()
   {
     super.initState();
+    FirebaseAuth.instance.currentUser.reload();
     getUser();
+
   }
 
   getUser() async
@@ -74,6 +76,11 @@ class _EditProfileState extends State<EditProfile> {
     var completedTask = await uploadTask.snapshot;
     String downloadURL = await completedTask.ref.getDownloadURL();
     FirebaseAuth.instance.currentUser.updateProfile(photoURL: downloadURL);
+    var dr = FirebaseFirestore.instance.collection('users').doc(FirebaseAuth.instance.currentUser.uid).collection('userInfo').doc(FirebaseAuth.instance.currentUser.uid).update({"profilePicture": downloadURL});
+    var dr2 = FirebaseFirestore.instance.collection("user search").doc(FirebaseAuth.instance.currentUser.uid).update(
+        {"profilePicture": downloadURL});
+    print(dr);
+    print(dr2);
   }
 
 
@@ -116,7 +123,12 @@ class _EditProfileState extends State<EditProfile> {
         title: Text("Edit profile"),
         backgroundColor: Colors.yellow,
       ),
-      body: Column(
+      body: RefreshIndicator(
+        onRefresh: (){
+          Navigator.push(context, PageRouteBuilder(pageBuilder: (a,b,c)=> EditProfile(), transitionDuration: Duration(seconds: 0)));
+          return Future.value(false);
+        },
+       child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             changeDP(),
@@ -128,6 +140,8 @@ class _EditProfileState extends State<EditProfile> {
             FlatButton(onPressed: updateProfileData, child: Text('Update Profile Data'))
           ],
         ),
+      )
+
     );
   }
 }

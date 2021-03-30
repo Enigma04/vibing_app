@@ -4,11 +4,11 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 //import 'package:provider/provider.dart';
 import 'package:vibing_app/User_Login.dart';
-import 'package:vibing_app/User_Profile.dart';
 import 'package:vibing_app/model/firestore_service.dart';
 import 'package:vibing_app/user_details_registeration.dart';
 import 'package:vibing_app/model/database.dart';
 import 'package:vibing_app/model/user_provider.dart';
+import 'package:vibing_app/verification_screen.dart';
 import 'model/auth.dart';
 import 'package:vibing_app/feed.dart';
 import 'model/user.dart';
@@ -18,11 +18,11 @@ class UserReg extends StatelessWidget {
   final BaseAuth auth;
   UserReg({Key key, @required this.newUser, this.auth}): super(key: key);
   final _formkey = GlobalKey<FormState>();
+  TextEditingController _rEmailController = new TextEditingController();
+  TextEditingController _rPasswordController = new TextEditingController();
+
   @override
   Widget build(BuildContext context) {
-
-    TextEditingController _rEmailController = new TextEditingController();
-    TextEditingController _rPasswordController = new TextEditingController();
     _rEmailController.text = newUser.email;
     _rPasswordController.text = newUser.password;
 
@@ -48,12 +48,10 @@ class UserReg extends StatelessWidget {
           String userId = user.toString();
           user.user.updateProfile(displayName: newUser.firstName+ " " +newUser.lastName);
           final String userUID = FirebaseAuth.instance.currentUser.uid;
-          //final uid = users.uid;
-          FirebaseFirestore.instance.collection('user').doc(userUID).collection('user Info').add(newUser.toMap());
+          FirebaseFirestore.instance.collection('user').doc(userUID).collection('user Info').doc(userUID).set(newUser.toMap());
           FirebaseFirestore.instance.collection('user search').doc(userUID).set(newUser.toMap());
-          //FirebaseFirestore.instance.collection('user').doc(newUser.firstName + " " +newUser.lastName).collection('user Info').add(newUser.toMap());
           await Auth().sendEmailVerification();
-          print('Registered! $userId, sent email verification');
+          print('Registered! $userId');
         }
         catch (e) {
           print('Error: $e');
@@ -141,7 +139,8 @@ class UserReg extends StatelessWidget {
                     //userProvider.saveUser();
                     _validateAndSubmit();
                     _formkey.currentState.reset();
-                    Navigator.popUntil(context, (route) => route.isFirst);
+                   Navigator.popUntil(context, (route) => route.isFirst);
+                   // Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=> VerificationScreen()));
                   },
                   label: Text("Register", style: TextStyle(fontWeight: FontWeight.bold),)
               ),
