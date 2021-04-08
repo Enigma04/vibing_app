@@ -4,6 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:vibing_app/User_Profile.dart';
 import 'package:vibing_app/model/user.dart';
@@ -21,7 +22,9 @@ class _EditProfileState extends State<EditProfile> {
   bool isLoading = false;
   AppUser user;
   bool bioValid = true;
-
+  bool uploadImageBool = false;
+  File image;
+  String downloadImageURL;
   @override
   void initstate()
   {
@@ -64,39 +67,83 @@ class _EditProfileState extends State<EditProfile> {
       ],
     );
   }
-
+/*
   Future <String> pickImage() async
   {
     PickedFile pickedFile = await ImagePicker().getImage(source: ImageSource.gallery);
     File profile_pic = File(pickedFile.path);
-    //String filename = basename(pickedFile.path);
     var storageReference = FirebaseStorage.instance.ref().child(
         "user/profile/${FirebaseAuth.instance.currentUser.uid}");
     var uploadTask = storageReference.putFile(profile_pic);
-    var completedTask = await uploadTask.snapshot;
-    String downloadURL = await completedTask.ref.getDownloadURL();
-    FirebaseAuth.instance.currentUser.updateProfile(photoURL: downloadURL);
-    var dr = FirebaseFirestore.instance.collection('users').doc(FirebaseAuth.instance.currentUser.uid).collection('userInfo').doc(FirebaseAuth.instance.currentUser.uid).update({"profilePicture": downloadURL});
-    var dr2 = FirebaseFirestore.instance.collection("user search").doc(FirebaseAuth.instance.currentUser.uid).update(
-        {"profilePicture": downloadURL});
-    print(dr);
-    print(dr2);
+    await uploadTask.whenComplete(() async{
+      var completedTask = await uploadTask.snapshot;
+      String downloadURL = await completedTask.ref.getDownloadURL();
+      FirebaseAuth.instance.currentUser.updateProfile(photoURL: downloadURL);
+      var dr = FirebaseFirestore.instance.collection('users').doc(FirebaseAuth.instance.currentUser.uid).collection('userInfo').doc(FirebaseAuth.instance.currentUser.uid).update({"profilePicture": downloadURL});
+      var dr2 = FirebaseFirestore.instance.collection("user search").doc(FirebaseAuth.instance.currentUser.uid).update(
+          {"profilePicture": downloadURL});
+      print(dr);
+      print(dr2);
+    });
   }
 
+ */
 
-  CircleAvatar changeDP()
+  uploadImage() async
   {
-    return CircleAvatar(
-      radius: 90,
-      backgroundImage: FirebaseAuth.instance.currentUser.photoURL!= null ? Image.network(FirebaseAuth.instance.currentUser.photoURL).image: Image.network("https://t4.ftcdn.net/jpg/03/32/59/65/360_F_332596535_lAdLhf6KzbW6PWXBWeIFTovTii1drkbT.jpg").image,
-    );
+    if(uploadImageBool == true)
+    {
+      try
+      {
+        var storageReference = FirebaseStorage.instance.ref().child(
+            "user/${FirebaseAuth.instance.currentUser.uid}/profile pic");
+        var uploadTask = storageReference.putFile(image);
+        await uploadTask.whenComplete(()async{
+          var completedTask = uploadTask.snapshot;
+          downloadImageURL =  await completedTask.ref.getDownloadURL();
+          FirebaseAuth.instance.currentUser.updateProfile(photoURL: downloadImageURL);
+        });
+        print(downloadImageURL);
+        Fluttertoast.showToast(
+          backgroundColor: Colors.green,
+          msg: 'Profile Picture updated successfully'
+        ).then((value) => Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=> PracticeProfile(profileId: FirebaseAuth.instance.currentUser?.uid,))));
+      }
+      catch(e) {
+        Fluttertoast.showToast(
+            backgroundColor: Colors.red,
+            msg: '$e'
+        );
+        print("Error: $e");
+      }
+
+    }
   }
+
+  checkUploadImage() async
+  {
+
+    PickedFile pickedFile = await ImagePicker().getImage(source: ImageSource.gallery);
+    File profile_pic = File(pickedFile.path);
+    if(profile_pic!= null)
+    {
+      setState(() {
+        uploadImageBool = true;
+        image = profile_pic;
+      });
+    }
+    else
+      print("Failed to upload image");
+  }
+
+
+
 
   FlatButton changePicButton()
   {
     return FlatButton(
-        onPressed: pickImage,
-        child: Text("Change Profile Picture")
+        onPressed: uploadImage,
+        child: Text("Upload Profile Picture")
     );
   }
 
@@ -115,9 +162,33 @@ class _EditProfileState extends State<EditProfile> {
         FirebaseFirestore.instance.collection('user').doc(widget.currentUserId).collection('user info').doc().update({
           "bio": bioController.text
         });
+        Fluttertoast.showToast(
+          backgroundColor: Colors.green,
+            msg: 'Bio updated!'
+        ).then((value) => Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=> PracticeProfile())));
       }
+    else
+      Fluttertoast.showToast(
+        backgroundColor: Colors.red,
+          msg: 'Something went wrong, try again');
   }
   Widget build(BuildContext context) {
+
+    GestureDetector profilePicture = GestureDetector(
+      onTap: ()=> checkUploadImage(),
+      child: CircleAvatar(
+        radius: 90,
+        child: image != null?
+        CircleAvatar(
+          radius: 85,
+          backgroundImage: Image.file(image).image,
+        ): CircleAvatar(
+          radius: 85,
+          backgroundImage: Image.network(FirebaseAuth.instance.currentUser.photoURL).image,
+        ),
+      ),
+    );
+
     return Scaffold(
       appBar: AppBar(
         title: Text("Edit profile"),
@@ -131,13 +202,13 @@ class _EditProfileState extends State<EditProfile> {
        child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            changeDP(),
+            profilePicture,
             SizedBox(height: 6,),
             changePicButton(),
             SizedBox(height: 6,),
             updateBioField(),
             SizedBox(height: 6,),
-            FlatButton(onPressed: updateProfileData, child: Text('Update Profile Data'))
+            FlatButton(onPressed: updateProfileData, child: Text('Update Bio'))
           ],
         ),
       )

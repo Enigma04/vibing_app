@@ -26,8 +26,7 @@ class _UserVibeState extends State<UserVibe> {
     TextEditingController vibeController = new TextEditingController();
     String downloadURL;
   FilePickerResult getAudioFile;
-  //Future<QuerySnapshot> userName =
-  //var userName = User.;
+
   getPost(post){
     this.post = post;
   }
@@ -54,8 +53,10 @@ class _UserVibeState extends State<UserVibe> {
         var storageReference = FirebaseStorage.instance.ref().child(
             "user/${FirebaseAuth.instance.currentUser.uid}/${getAudioFile.files.single.name}");
         var uploadTask = storageReference.putFile(audioFile);
-        var completedTask =  uploadTask.snapshot;
-        downloadURL = await completedTask.ref.getDownloadURL();
+        await uploadTask.whenComplete(()async{
+          var completedTask =  uploadTask.snapshot;
+          downloadURL = await completedTask.ref.getDownloadURL();
+        });
         print(downloadURL);
         Map <String, dynamic> userPost={
           'post': post,
@@ -80,7 +81,9 @@ class _UserVibeState extends State<UserVibe> {
      getAudioFile = await FilePicker.platform.pickFiles(type: FileType.custom, allowedExtensions: ['.mp3', '.aac']);
     if(getAudioFile != null)
       {
-        uploadedFile = true;
+        setState(() {
+          uploadedFile = true;
+        });
         print(getAudioFile.files.single.path);
       }
     else

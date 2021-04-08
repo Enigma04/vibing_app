@@ -11,21 +11,12 @@ class UserProvider{
    String lastName;
    String email;
    String password;
-   String bio;
-   String age;
-   int _gender;
-  //String uid = FirebaseAuth.instance.currentUser.uid;
-  //Getters
-UserProvider(this.firstName, this.lastName, this.email, this.password, this.age,);
+   String photoURL;
+   UserCredential user;
 
-/*
-saveUser() {
-  var newUser = AppUser(firstName: firstName, lastName: lastName, age: age, email: email, password: password, userId: uid, bio: bio);
-  firestoreService.saveUsers(newUser);
-  print("$firstName, $lastName, $age, $email, $password");
-}
+UserProvider(this.firstName, this.lastName, this.email, this.password,this.photoURL);
 
- */
+
   Map<String,dynamic> toMap() {
     return {
       'userId' : FirebaseAuth.instance.currentUser.uid,
@@ -34,28 +25,12 @@ saveUser() {
       'last_name': lastName,
       'emailid': email,
       'password': password,
-      'age': age,
       'bio': "",
-      'followers': 0,
-      'following': 0,
-      'profilePicture': (FirebaseAuth.instance.currentUser.photoURL != null)? FirebaseAuth.instance.currentUser.photoURL: 'https://t4.ftcdn.net/jpg/03/32/59/65/360_F_332596535_lAdLhf6KzbW6PWXBWeIFTovTii1drkbT.jpg'
+      'profile_picture': photoURL,
       //'gender' : gender,
     };
   }
 
-  /*
-  factory UserProvider.fromDocument(DocumentSnapshot docu){
-    return UserProvider(
-      uid: docu.data()['uid'],
-      firstName: docu.data()['first_name'],
-      lastName: docu.data()['last_name'],
-      email: docu.data()['email'],
-      age: docu.data()['age'],
-      bio: docu.data()['bio'],
-    );
-  }
-
-   */
 
 
 }

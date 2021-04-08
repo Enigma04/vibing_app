@@ -8,13 +8,11 @@ class AppUser {
   String userId;
   String email;
   String password;
-  int age;
-  int gender;
   String bio;
   String photoURL;
   String fullName;
 
-  AppUser({this.userId, this.firstName, this.lastName,this.email,this.password, this.age, this.bio, this.photoURL, this.fullName});
+  AppUser({this.userId, this.firstName, this.lastName,this.email,this.password, this.bio, this.photoURL, this.fullName});
 
   Map<String,dynamic> toMap()
   {
@@ -24,7 +22,6 @@ class AppUser {
       'last_name' : lastName,
       'emailid' : email,
       'password': password,
-      'age' : age,
       'bio': bio,
       //'gender' : gender,
     };
@@ -39,9 +36,8 @@ class AppUser {
       firstName: docu.data()['first_name'],
       lastName: docu.data()['last_name'],
       email: docu.data()['email'],
-      //age: docu.data()['age'],
       bio: docu.data()['bio'],
-      photoURL: docu.data()['profilePicture'],
+      photoURL: docu.data()['profile_picture'],
 
     );
   }

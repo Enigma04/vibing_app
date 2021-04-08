@@ -1,19 +1,7 @@
 import 'package:flutter/material.dart';
-//import 'package:provider/provider.dart';
-import 'package:vibing_app/User_Login.dart';
-import 'package:vibing_app/model/auth.dart';
-import 'package:vibing_app/model/database.dart';
-import 'package:vibing_app/register_user.dart';
-import 'package:vibing_app/register_user.dart';
 import 'package:vibing_app/model/user_provider.dart';
-import 'model/user.dart';
+import 'package:vibing_app/register_user.dart';
 
-/*
-enum Gender{
-  Male, Female, Others
-}
-
- */
 
 class UserDetails extends StatefulWidget {
   final UserProvider newUser;
@@ -42,6 +30,7 @@ class _UserDetailsState extends State<UserDetails> {
         form.save();
         widget.newUser.firstName = _firstNameController.text;
         widget.newUser.lastName = _lastNameController.text;
+        Navigator.push(context, MaterialPageRoute(builder: (context)=> UserReg(newUser: widget.newUser)));
       }
       return null;
     }
@@ -52,7 +41,7 @@ class _UserDetailsState extends State<UserDetails> {
       child: TextFormField(
         controller: _firstNameController,
         autofocus: false,
-        keyboardType: TextInputType.text,
+        keyboardType: TextInputType.name,
         validator: (value) {
           if(value.isEmpty)
           {
@@ -74,7 +63,7 @@ class _UserDetailsState extends State<UserDetails> {
       child: TextFormField(
         controller: _lastNameController,
         autofocus: false,
-        keyboardType: TextInputType.text,
+        keyboardType: TextInputType.name,
         validator: (value) {
           if(value.isEmpty)
           {
@@ -134,7 +123,6 @@ class _UserDetailsState extends State<UserDetails> {
               _firstName,
               SizedBox(height: MediaQuery.of(context).size.height * 0.02,),
               _lastName,
-
               SizedBox(height: MediaQuery.of(context).size.height * 0.02,),
 
               SizedBox(height: MediaQuery.of(context).size.height * 0.02,),
@@ -157,7 +145,6 @@ class _UserDetailsState extends State<UserDetails> {
                       onPressed: () async{
                         //String userid = await Auth().getCurrentUser();
                         _validateAndSave();
-                        Navigator.push(context, MaterialPageRoute(builder: (context)=> UserReg(newUser: widget.newUser))).then((value) => formkeyDetails.currentState.reset());
                       },
                       label: Text("Next", style: TextStyle(fontWeight: FontWeight.bold),)
                   ),

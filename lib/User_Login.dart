@@ -2,12 +2,12 @@
 import'package:flutter/widgets.dart';
 import'package:flutter/foundation.dart';
 import'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:vibing_app/model/auth.dart';
 import 'package:vibing_app/feed.dart';
 import'package:vibing_app/register_user.dart';
 import 'package:vibing_app/forgot_password.dart';
 import 'package:vibing_app/main.dart';
-import 'package:vibing_app/settings.dart';
 import 'package:vibing_app/user_details_registeration.dart';
 import 'package:vibing_app/verification_screen.dart';
 import 'package:vibing_app/your_sound_recording_list.dart';
@@ -61,10 +61,10 @@ class _UserLoginState extends State<UserLogin> {
    {
      if(_validateAndSave()) {
        try {
-         String userId = await Auth().signIn(emailid, password).then((value) =>
-             Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>Feed(auth:new Auth(),)))
-          // Navigator.push(context, MaterialPageRoute(builder: (context)=> VerficationScreen()))
-         );
+            String userId = await Auth().signIn(emailid, password);
+            SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+            sharedPreferences.setString('email', emailid);
+            Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>Feed(auth:new Auth(),)));
          print('Signed in! $userId');
          _formkey.currentState.reset();
          //widget.onSignedIn();
@@ -134,15 +134,9 @@ class _UserLoginState extends State<UserLogin> {
      ),
    );
 
-  /*final login_button =
-
-    },
-  );
-   */
-
   @override
   Widget build(BuildContext context) {
-    final user = new UserProvider(null, null, null,null,null);
+    final user = new UserProvider(null,null, null, null,null);
     return new Scaffold(
       resizeToAvoidBottomInset: false,
       backgroundColor: Colors.yellow,
