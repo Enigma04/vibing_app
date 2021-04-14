@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -18,7 +20,7 @@ class Post extends StatefulWidget {
       ownerID: doc['uid'],
       user_name: doc['user_name'],
       description: doc['post'],
-      profile_picture: doc['photourl'],
+      profile_picture: doc['profile_picture'],
       likes: doc['likes'],
 
     );
@@ -73,6 +75,69 @@ class _PostState extends State<Post> {
     this.description,
     this.likeCount
 });
+
+
+  handleLikes()
+  {
+    bool _isLiked = likes[currentUserId] = true;
+    if(_isLiked)
+      {
+        FirebaseFirestore.instance.collection('user_posts').doc(time).update({'likes.$currentUserId': false});
+        removeLikeFromActivityFeed();
+        setState(() {
+          likeCount -=1;
+          isLiked = false;
+          likes[currentUserId] = false;
+        });
+
+      }
+    else if(!_isLiked)
+      {
+        FirebaseFirestore.instance.collection('user_posts').doc(time).update({'likes.$currentUserId': true});
+        addLikeToActivityFeed();
+        setState(() {
+          likeCount += 1;
+          isLiked = true;
+          likes[currentUserId] = true;
+          showHeart = true;
+        });
+        Timer(Duration(milliseconds: 500), () {
+          setState(() {
+            showHeart = false;
+          });
+        });
+      }
+  }
+
+  addLikeToActivityFeed() {
+    // add a notification to the postOwner's activity feed only if comment made by OTHER user (to avoid getting notification for our own like)
+    bool isNotPostOwner = currentUserId != ownerID;
+    if (isNotPostOwner) {
+      FirebaseFirestore.instance
+          .doc(time)
+          .set({
+        "full_name": currentUser.displayName,
+        "userId": currentUser.uid,
+        "userProfileImg": currentUser.photoURL,
+        "timestamp": time,
+      });
+    }
+  }
+
+  removeLikeFromActivityFeed() {
+    bool isNotPostOwner = currentUserId != ownerID;
+    if (isNotPostOwner) {
+      FirebaseFirestore.instance
+          .doc(time)
+          .get()
+          .then((doc) {
+        if (doc.exists) {
+          doc.reference.delete();
+        }
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container();

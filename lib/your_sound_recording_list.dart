@@ -29,57 +29,64 @@ class _UserSoundRecordingListState extends State<UserSoundRecordingList> {
           style: TextStyle(fontWeight: FontWeight.bold),
         ),
       ),
-      body: FutureBuilder(
-          future: FirebaseFirestore.instance.collection('user').doc(currentUser).collection('Audio Files').get(),
-          builder: (context, snapshot) {
-            if (snapshot.hasData &&
-                snapshot.connectionState == ConnectionState.done) {
-              return ListView.builder(
-                  itemCount: snapshot.data.docs.length,
-                  itemBuilder: (context, index) {
-                    DocumentSnapshot myAudio = snapshot.data.docs[index];
-                    return Card(
-                      child: ListTile(
-                        leading: myAudio.data()['file_name'],
-                        trailing: myAudio.data()['audioFile'] != null
-                            ? IconButton(
-                          icon: (selectedIndex == index && !isPlaying) ? Icon(
-                              Icons.pause) : Icon(Icons.music_note_sharp),
-                          onPressed: () async {
-                            if (!isPlaying) {
-                              isPlaying = true;
-                              setState(() {
-                                selectedIndex = index;
-                              });
-                              audioPlayer.play(
-                                  await myAudio.data()['audioFile'],
-                                  isLocal: false);
-                              audioPlayer.onPlayerCompletion.listen((event) {
+      body: RefreshIndicator(
+        onRefresh: (){
+          Navigator.pushReplacement(context, PageRouteBuilder(pageBuilder: (a,b,c)=> UserSoundRecordingList(), transitionDuration: Duration(seconds: 0)));
+          return Future.value(false);
+        },
+        child: FutureBuilder(
+            future: FirebaseFirestore.instance.collection('user').doc(currentUser).collection('Audio Files').get(),
+            builder: (context, snapshot) {
+              if (snapshot.hasData &&
+                  snapshot.connectionState == ConnectionState.done) {
+                return ListView.builder(
+                    itemCount: snapshot.data.docs.length,
+                    itemBuilder: (context, index) {
+                      DocumentSnapshot myAudio = snapshot.data.docs[index];
+                      return Card(
+                        child: ListTile(
+                          leading: myAudio.data()['file_name'].toString().length >= 20?
+                          Text('${myAudio.data()['file_name'].toString().substring(0,20)}....') : Text(myAudio.data()['file_name'].toString()),
+                          trailing: myAudio.data()['audioFile'] != null
+                              ? IconButton(
+                            icon: (selectedIndex == index && !isPlaying) ? Icon(
+                                Icons.pause) : Icon(Icons.music_note_sharp),
+                            onPressed: () async {
+                              if (!isPlaying) {
+                                isPlaying = true;
                                 setState(() {
-                                  isPlaying = false;
-                                  selectedIndex = -1;
+                                  selectedIndex = index;
                                 });
-                              });
-                            }
-                            else {
-                              await audioPlayer.pause();
-                              isPlaying = false;
-                            }
-                            setState(() {});
-                          },
-                        )
-                            : null,
-                      ),
-                    );
-                  }
-              );
+                                audioPlayer.play(
+                                    await myAudio.data()['audioFile'],
+                                    isLocal: false);
+                                audioPlayer.onPlayerCompletion.listen((event) {
+                                  setState(() {
+                                    isPlaying = false;
+                                    selectedIndex = -1;
+                                  });
+                                });
+                              }
+                              else {
+                                await audioPlayer.pause();
+                                isPlaying = false;
+                              }
+                              setState(() {});
+                            },
+                          )
+                              : null,
+                        ),
+                      );
+                    }
+                );
+              }
+              else {
+                return Center(
+                  child: CircularProgressIndicator(),
+                );
+              }
             }
-            else {
-              return Center(
-                child: !snapshot.hasData ? Text("No data found"):CircularProgressIndicator(),
-              );
-            }
-          }
+        ),
       ),
     );
   }

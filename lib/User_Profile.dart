@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/rendering.dart';
 import 'package:path/path.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -29,12 +30,18 @@ class _PracticeProfileState extends State<PracticeProfile> {
   bool isFollowing = false;
   int followerCount = 0;
   int followingCount = 0;
+  bool isPlaying;
+  int selectedIndex;
+  int likeCount;
+  AudioPlayer audioPlayer = AudioPlayer(mode: PlayerMode.LOW_LATENCY);
 
   @override
   void initState()
   {
     super.initState();
     FirebaseAuth.instance.currentUser.reload();
+    selectedIndex = -1;
+    isPlaying = false;
     getFollowers();
     getFollowing();
     checkFollowing();
@@ -312,6 +319,32 @@ class _PracticeProfileState extends State<PracticeProfile> {
                                               alignment: Alignment(-60, 0),
                                               onPressed: null,
                                             ),
+                                            myPost.data()['audioFile'] != null? IconButton(
+                                              icon: (selectedIndex == index && !isPlaying) ? Icon(Icons.pause): Icon(Icons.music_note_sharp),
+                                              onPressed:()async{
+                                                if(!isPlaying)
+                                                {
+                                                  isPlaying = true;
+                                                  setState(() {
+                                                    selectedIndex = index;
+                                                  });
+                                                  audioPlayer.play(await myPost.data()['audioFile'], isLocal: false);
+                                                  audioPlayer.onPlayerCompletion.listen((event) {
+                                                    setState(() {
+                                                      isPlaying = false;
+                                                      selectedIndex = -1;
+                                                    });
+                                                  });
+                                                }
+                                                else
+                                                {
+                                                  await audioPlayer.pause();
+                                                  isPlaying = false;
+                                                }
+                                                setState(() {});
+                                              },
+                                              color: Colors.black,
+                                              alignment: Alignment(-60, 0),): null,
                                           ],
                                         )
                                       ],

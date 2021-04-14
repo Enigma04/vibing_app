@@ -251,60 +251,66 @@ class _UserRegState extends State<UserReg> {
       color: Colors.yellow,
     );
     return new Scaffold(
-      resizeToAvoidBottomInset: false,
+      resizeToAvoidBottomInset: true,
       backgroundColor: Colors.yellow,
-      body: Container(
-        height: MediaQuery.of(context).size.height,
-        child: Form(
-          key: _formkey,
-          child: Column(
-            crossAxisAlignment:  CrossAxisAlignment.center,
-            children: <Widget>[
-              SizedBox(height: MediaQuery.of(context).size.height *0.2,),
-              Text('Register',
-                style:TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 64,
+      body: SingleChildScrollView(
+        child: Stack(
+          children: [
+            Container(
+              height: MediaQuery.of(context).size.height,
+              child: Form(
+                key: _formkey,
+                child: Column(
+                  crossAxisAlignment:  CrossAxisAlignment.center,
+                  children: <Widget>[
+                    SizedBox(height: MediaQuery.of(context).size.height *0.2,),
+                    Text('Register',
+                      style:TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 64,
+                      ),
+                    ),
+                    SizedBox(height: MediaQuery.of(context).size.height * 0.06,),
+                    profilePicture,
+                    SizedBox(height: MediaQuery.of(context).size.height * 0.03,),
+                    _regEmail,
+                    SizedBox(height: MediaQuery.of(context).size.height * 0.03,),
+                    _regpass,
+                    SizedBox(height:MediaQuery.of(context).size.height * 0.03),
+                    uploadVideoButton,
+                    SizedBox(height: MediaQuery.of(context).size.height * 0.03,),
+                    FloatingActionButton.extended(
+                        heroTag: "Register_Button",
+                        backgroundColor: Colors.yellow,
+                        foregroundColor: Colors.black,
+                        onPressed:  (){
+                          _validateAndSubmit();
+                        },
+                        label: Text("Register", style: TextStyle(fontWeight: FontWeight.bold),)
+                    ),
+
+                    SizedBox(height: MediaQuery.of(context).size.height * 0.02,),
+                    FlatButton(
+                      child: Text('Already Registered? Sign in!'),
+                      onPressed: ()=> Navigator.popUntil(context, (route) => route.isFirst),
+                    ),
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: <Widget>[
+                        FloatingActionButton.extended(
+                            heroTag: "prev_button1",
+                            backgroundColor: Colors.yellow,
+                            foregroundColor: Colors.black,
+                            onPressed:  ()=>  Navigator.pop(context),
+                            label: Text("Prev", style: TextStyle(fontWeight: FontWeight.bold),)
+                        ),
+                      ],
+                    ),
+                  ],
                 ),
               ),
-              SizedBox(height: MediaQuery.of(context).size.height * 0.06,),
-              profilePicture,
-              SizedBox(height: MediaQuery.of(context).size.height * 0.03,),
-              _regEmail,
-              SizedBox(height: MediaQuery.of(context).size.height * 0.03,),
-              _regpass,
-              SizedBox(height:MediaQuery.of(context).size.height * 0.03),
-              uploadVideoButton,
-              SizedBox(height: MediaQuery.of(context).size.height * 0.03,),
-              FloatingActionButton.extended(
-                  heroTag: "Register_Button",
-                  backgroundColor: Colors.yellow,
-                  foregroundColor: Colors.black,
-                  onPressed:  (){
-                    _validateAndSubmit();
-                  },
-                  label: Text("Register", style: TextStyle(fontWeight: FontWeight.bold),)
-              ),
-
-              SizedBox(height: MediaQuery.of(context).size.height * 0.02,),
-              FlatButton(
-                child: Text('Already Registered? Sign in!'),
-                onPressed: ()=> Navigator.popUntil(context, (route) => route.isFirst),
-              ),
-              Row(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: <Widget>[
-                  FloatingActionButton.extended(
-                      heroTag: "prev_button1",
-                      backgroundColor: Colors.yellow,
-                      foregroundColor: Colors.black,
-                      onPressed:  ()=>  Navigator.pop(context),
-                      label: Text("Prev", style: TextStyle(fontWeight: FontWeight.bold),)
-                  ),
-                ],
-              ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );

@@ -37,6 +37,7 @@ class _UserVibeState extends State<UserVibe> {
         'user_name': user.displayName,
         'profile_picture' : user.photoURL,
         'uid': user.uid,
+        'like': 0,
       };
       ds.set(userPost).whenComplete(() => print("Posted!"));
       ds1.set(userPost).whenComplete(() => print("Saved in user's personal file"));
@@ -59,6 +60,7 @@ class _UserVibeState extends State<UserVibe> {
         'profile_picture' : user.photoURL,
         'uid': user.uid,
         'audioFile': downloadURL,
+        'like': 0,
       };
 
       ds.set(userPost).whenComplete(() => print("Posted with file!"));

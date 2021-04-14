@@ -13,7 +13,6 @@ import 'package:vibing_app/post_collaborations.dart';
 import 'package:vibing_app/your_sound_recording_list.dart';
 
 import 'model/auth.dart';
-//import 'package:provider/provider.dart';
 
 var email;
 void main() async {
@@ -33,11 +32,8 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'Vibing',
       routes: {
-        //'/user_profile': (context)=> new UserProfile(),
         '/your_sound_recording': (context) => new UserSoundRecordingList(),
-        //'/user_details':(context) => new UserDetails(),
         '/user_login': (context) => new UserLogin(),
-        //'/user_register':(context)=> new UserReg(),
         '/forgot_password': (context) => new ForgotPass(),
         '/post_collaborations': (context) => new PostCollaborations(),
         '/collab': (context) => new Collaborate(),

@@ -9,6 +9,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:vibing_app/User_Login.dart';
 import 'package:vibing_app/User_Profile.dart';
 import 'package:vibing_app/collaboration.dart';
+import 'package:vibing_app/model/User_post_model.dart';
 import 'package:vibing_app/model/auth.dart';
 import 'package:vibing_app/search.dart';
 import 'package:vibing_app/your_sound_recording_list.dart';
@@ -26,10 +27,10 @@ class Feed extends StatefulWidget {
 
 class _FeedState extends State<Feed> {
 
-  //int count = 0;
   String email = "";
   bool isPlaying;
   int selectedIndex;
+  int likeCount;
   AudioPlayer audioPlayer = AudioPlayer(mode: PlayerMode.LOW_LATENCY);
 
   Future getEmail() async {
@@ -38,6 +39,24 @@ class _FeedState extends State<Feed> {
       email = preferences.getString('email');
     });
   }
+
+  getLikes() async{
+    QuerySnapshot likeSnapshot = await FirebaseFirestore.instance.collection('user_post').
+    doc().
+    collection('likes').
+    get();
+    setState(() {
+      likeCount = likeSnapshot.docs.length;
+    });
+
+  }
+  /*
+  checkLikes() async{
+    DocumentSnapshot doc =
+  }
+
+   */
+
 
   @override
   void initState()
@@ -177,7 +196,9 @@ class _FeedState extends State<Feed> {
                                       IconButton(
                                         icon: Icon(Icons.favorite_border),
                                         alignment: Alignment(-60, 0),
-                                        onPressed: null,
+                                        onPressed: () {
+
+                                        },
                                       ),
                                       IconButton(
                                         icon: Icon(Icons.add_comment),
