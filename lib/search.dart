@@ -75,11 +75,10 @@ class _UserSearchState extends State<UserSearch> {
         if(!snapshot.hasData)
           return Center(child: CircularProgressIndicator() ,);
         List<UserResult> searchResults = [];
-        snapshot.data.documents.forEach((doc) {
+        snapshot.data.docs.forEach((doc) {
           AppUser user = AppUser.fromDocument(doc);
           UserResult searchResult = UserResult(user);
           searchResults.add(searchResult);
-
         });
         return ListView(
           children: searchResults,

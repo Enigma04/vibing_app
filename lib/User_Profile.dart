@@ -80,7 +80,7 @@ class _PracticeProfileState extends State<PracticeProfile> {
         child: Text(
           text,
           style: TextStyle(
-            color: isFollowing ? Colors.black : Colors.yellow,
+            color: Colors.black,
           ),
         ),
       ),
@@ -211,7 +211,7 @@ class _PracticeProfileState extends State<PracticeProfile> {
 
     buildProfileButton()
     {
-      bool isProfileOwner = currentUserId == widget.profileId;
+      bool isProfileOwner = FirebaseAuth.instance.currentUser.uid == widget.profileId;
       if(isProfileOwner)
         return buildButton(
           text: "Edit Profile",

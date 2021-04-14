@@ -1,7 +1,9 @@
 
+import 'package:firebase_auth/firebase_auth.dart';
 import'package:flutter/widgets.dart';
 import'package:flutter/foundation.dart';
 import'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:vibing_app/model/auth.dart';
 import 'package:vibing_app/feed.dart';
@@ -62,16 +64,25 @@ class _UserLoginState extends State<UserLogin> {
      if(_validateAndSave()) {
        try {
             String userId = await Auth().signIn(emailid, password);
+            String user = FirebaseAuth.instance.currentUser.displayName;
             SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
             sharedPreferences.setString('email', emailid);
             Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>Feed(auth:new Auth(),)));
-         print('Signed in! $userId');
-         _formkey.currentState.reset();
+            print('Signed in! $userId');
+             Fluttertoast.showToast(
+           backgroundColor: Colors.green,
+             msg: 'Signed in! $user'
+            );
+           _formkey.currentState.reset();
          //widget.onSignedIn();
          
        }
        catch (e) {
          print('Error: $e');
+         Fluttertoast.showToast(
+           backgroundColor: Colors.red,
+             msg: e.toString().substring(30),
+         );
        }
      }
 

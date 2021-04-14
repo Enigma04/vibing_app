@@ -184,7 +184,7 @@ class _EditProfileState extends State<EditProfile> {
           backgroundImage: Image.file(image).image,
         ): CircleAvatar(
           radius: 85,
-          backgroundImage: Image.network(FirebaseAuth.instance.currentUser.photoURL).image,
+          backgroundImage: (FirebaseAuth.instance.currentUser.photoURL != null)? Image.network(FirebaseAuth.instance.currentUser.photoURL).image : Image.network("https://t4.ftcdn.net/jpg/03/32/59/65/360_F_332596535_lAdLhf6KzbW6PWXBWeIFTovTii1drkbT.jpg").image,
         ),
       ),
     );

@@ -58,7 +58,13 @@ class _CollaborateState extends State<Collaborate>{
                                 DocumentSnapshot collaborators = snapshot.data.docs[index];
                                 //user = AppUser.fromDocument();
                                 return GestureDetector(
-                                  //onTap: ()=> Navigator.push(context, MaterialPageRoute(builder: (context)=> ViewCollabDetails(photoURL: ,))),
+                                  onTap: ()=> Navigator.push(context, MaterialPageRoute(builder: (context)=> ViewCollabDetails(
+                                    photoURL: collaborators.data()['photoURL'].toString(),
+                                    postedBy: collaborators.data()['posted_by'],
+                                    location: collaborators.data()['location'],
+                                    lookingFor: collaborators.data()['looking_for'],
+                                    description: collaborators.data()['description'],
+                                  ))),
                                   child: Card(
                                     shape: RoundedRectangleBorder(
                                         borderRadius: BorderRadius.circular(20.0)),
@@ -77,7 +83,6 @@ class _CollaborateState extends State<Collaborate>{
                                         Text('Looking For: ${collaborators.data()['looking_for']}'),
                                         SizedBox(height: MediaQuery.of(context).size.height* 0.01,),
                                         Text("Tap to view details", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),)
-
                                       ],
                                     ),
                                   ),
@@ -99,41 +104,3 @@ class _CollaborateState extends State<Collaborate>{
       );
   }
 }
-/*
-QuerySnapshot document = snapshot.data;
-                  List <DocumentSnapshot> docs = document.docs;
-                  //List <DocumentSnapshot> docs = List.generate(docs.length, (index) => Card());
-                  print(docs.length);
-                  new TinderSwapCard(
-                    swipeUp: false,
-                    swipeDown: false,
-                    orientation: AmassOrientation.BOTTOM,
-                    totalNum: docs.length,
-                    stackNum: 3,
-                    swipeEdge: 4.0,
-                    maxWidth: MediaQuery.of(context).size.width * 0.9,
-                    maxHeight: MediaQuery.of(context).size.width * 0.9,
-                    minWidth: MediaQuery.of(context).size.width * 0.8,
-                    minHeight: MediaQuery.of(context).size.width * 0.8,
-                    cardBuilder: (context, index) {
-                      return Card(
-                        elevation: 5,
-                        child: Text('${docs[index]}'),
-                      );
-                    },
-                    cardController: controller = CardController(),
-                    swipeUpdateCallback:
-                        (DragUpdateDetails details, Alignment align) {
-                      /// Get swiping card's alignment
-                      if (align.x < 0) {
-                        //Card is LEFT swiping
-                      } else if (align.x > 0) {
-                        //Card is RIGHT swiping
-                      }
-                    },
-                    swipeCompleteCallback:
-                        (CardSwipeOrientation orientation, int index) {
-                      /// Get orientation & index of swiped card!
-                    },
-                  );
- */

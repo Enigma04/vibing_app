@@ -1,16 +1,18 @@
 
+import 'package:audioplayers/audioplayers.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:vibing_app/User_Login.dart';
 import 'package:vibing_app/User_Profile.dart';
 import 'package:vibing_app/collaboration.dart';
 import 'package:vibing_app/model/auth.dart';
-import 'package:vibing_app/model/firestore_service.dart';
 import 'package:vibing_app/search.dart';
 import 'package:vibing_app/your_sound_recording_list.dart';
+
 
 class Feed extends StatefulWidget {
   Feed({this.auth,this.otherUsers});
@@ -23,9 +25,12 @@ class Feed extends StatefulWidget {
 }
 
 class _FeedState extends State<Feed> {
-  int count = 0;
+
+  //int count = 0;
   String email = "";
-  bool isSwitched = false;
+  bool isPlaying;
+  int selectedIndex;
+  AudioPlayer audioPlayer = AudioPlayer(mode: PlayerMode.LOW_LATENCY);
 
   Future getEmail() async {
     SharedPreferences preferences = await SharedPreferences.getInstance();
@@ -38,18 +43,13 @@ class _FeedState extends State<Feed> {
   void initState()
   {
     FirebaseAuth.instance.currentUser.reload();
+    selectedIndex = -1;
+    isPlaying = false;
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    Future <Widget> getImage(BuildContext context, String uid)async{
-        Image image;
-        await FirestoreService.loadImage(context, uid).then((value){
-          image = Image.network(value.toString());
-        });
-        return image;
-    }
     return Scaffold(
       drawer: Drawer(
         child: ListView(
@@ -100,12 +100,15 @@ class _FeedState extends State<Feed> {
               onTap: () async{
                 try{
                   User user =  await Auth().getCurrentUser();
-                  await Auth().signOut();
-                  SharedPreferences preferences = await SharedPreferences.getInstance();
-                  preferences.remove('email');
-                  Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>UserLogin()));
-                  print("Signed ${user.displayName} out successfully!");
-
+                  await Auth().signOut().then((value)async{
+                    SharedPreferences preferences = await SharedPreferences.getInstance();
+                    preferences.remove('email');
+                    Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>UserLogin(auth: new Auth())));
+                    print("Signed ${user.displayName} out successfully!");
+                    Fluttertoast.showToast(
+                        msg: "Signed ${user.displayName} out successfully!"
+                    );
+                  });
                 }
                 catch(e)
                 {
@@ -182,7 +185,31 @@ class _FeedState extends State<Feed> {
                                         alignment: Alignment(-60, 0),
                                         onPressed: null,
                                       ),
-                                      myPost.data()['audioFile'] != null? IconButton(icon: Icon(Icons.music_note_sharp), onPressed: null,  color: Colors.black,
+                                      myPost.data()['audioFile'] != null? IconButton(
+                                        icon: (selectedIndex == index && !isPlaying) ? Icon(Icons.pause): Icon(Icons.music_note_sharp),
+                                        onPressed:()async{
+                                          if(!isPlaying)
+                                            {
+                                              isPlaying = true;
+                                              setState(() {
+                                                selectedIndex = index;
+                                              });
+                                              audioPlayer.play(await myPost.data()['audioFile'], isLocal: false);
+                                              audioPlayer.onPlayerCompletion.listen((event) {
+                                                setState(() {
+                                                  isPlaying = false;
+                                                  selectedIndex = -1;
+                                                });
+                                              });
+                                            }
+                                          else
+                                            {
+                                              await audioPlayer.pause();
+                                              isPlaying = false;
+                                            }
+                                          setState(() {});
+                                        },
+                                        color: Colors.black,
                                         alignment: Alignment(-60, 0),): null,
 
                                     ],
@@ -229,5 +256,6 @@ showUserProfile(BuildContext context, {String profileID})
 {
   Navigator.push(context, MaterialPageRoute(builder: (context)=> PracticeProfile(profileId: profileID,)));
 }
+
 
 
