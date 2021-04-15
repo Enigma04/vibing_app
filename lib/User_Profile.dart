@@ -1,14 +1,11 @@
 import 'dart:io';
+
 import 'package:audioplayers/audioplayers.dart';
-import 'package:flutter/rendering.dart';
-import 'package:path/path.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
-import 'package:image_picker/image_picker.dart';
+import 'package:flutter/rendering.dart';
 import 'package:vibing_app/edit_user_profile.dart';
-import 'package:vibing_app/model/auth.dart';
 import 'package:vibing_app/model/user.dart';
 
 class PracticeProfile extends StatefulWidget {
@@ -28,11 +25,13 @@ class _PracticeProfileState extends State<PracticeProfile> {
   File profile_pic;
   bool isLoading = false;
   bool isFollowing = false;
+  bool isPlaying;
+  bool isLiked;
   int followerCount = 0;
   int followingCount = 0;
-  bool isPlaying;
   int selectedIndex;
-  int likeCount;
+  //int likeCount;
+  int selectedLike;
   AudioPlayer audioPlayer = AudioPlayer(mode: PlayerMode.LOW_LATENCY);
 
   @override
@@ -40,8 +39,10 @@ class _PracticeProfileState extends State<PracticeProfile> {
   {
     super.initState();
     FirebaseAuth.instance.currentUser.reload();
+    selectedLike = -1;
     selectedIndex = -1;
     isPlaying = false;
+    isLiked = false;
     getFollowers();
     getFollowing();
     checkFollowing();
@@ -144,66 +145,66 @@ class _PracticeProfileState extends State<PracticeProfile> {
   buildProfileHeader()
   {
     return FutureBuilder(
-        future: FirebaseFirestore.instance.collection('user search').doc(widget.profileId).get(),
-        builder: (context, snapshot){
-          if(!snapshot.hasData)
-            return CircularProgressIndicator();
-          AppUser user = AppUser.fromDocument(snapshot.data);
-          return Padding(
-            padding: EdgeInsets.all(20),
-            child: Column(
-              children: [
-                Row(
-                  children: [
-                    CircleAvatar(
-                      radius: 40,
-                      child: FlatButton(
-                        child: null,
-                        onPressed: null,
-                      ),
-                      backgroundImage: (user.photoURL != null) ?
-                      Image
-                          .network(user.photoURL)
-                          .image : Image
-                          .network(
-                          "https://t4.ftcdn.net/jpg/03/32/59/65/360_F_332596535_lAdLhf6KzbW6PWXBWeIFTovTii1drkbT.jpg")
-                          .image,
+      future: FirebaseFirestore.instance.collection('user search').doc(widget.profileId).get(),
+      builder: (context, snapshot){
+        if(!snapshot.hasData)
+          return CircularProgressIndicator();
+        AppUser user = AppUser.fromDocument(snapshot.data);
+        return Padding(
+          padding: EdgeInsets.all(20),
+          child: Column(
+            children: [
+              Row(
+                children: [
+                  CircleAvatar(
+                    radius: 40,
+                    child: FlatButton(
+                      child: null,
+                      onPressed: null,
                     ),
-                    Expanded(
-                      flex: 1,
-                        child: Column(
+                    backgroundImage: (user.photoURL != null) ?
+                    Image
+                        .network(user.photoURL)
+                        .image : Image
+                        .network(
+                        "https://t4.ftcdn.net/jpg/03/32/59/65/360_F_332596535_lAdLhf6KzbW6PWXBWeIFTovTii1drkbT.jpg")
+                        .image,
+                  ),
+                  Expanded(
+                    flex: 1,
+                    child: Column(
+                      children: [
+                        Row(
+                          mainAxisSize: MainAxisSize.min,
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                           children: [
-                            Row(
-                              mainAxisSize: MainAxisSize.min,
-                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                              children: [
-                                buildCount(label: "Followers", count: followerCount),
-                                SizedBox(width: MediaQuery.of(context).size.width * 0.1,),
-                                buildCount(label: "Following", count: followingCount)
-                              ],
-                            ),
+                            buildCount(label: "Followers", count: followerCount),
+                            SizedBox(width: MediaQuery.of(context).size.width * 0.1,),
+                            buildCount(label: "Following", count: followingCount)
                           ],
                         ),
+                      ],
+                    ),
 
-                    )
+                  )
 
-                  ],
-                ),
-                Container(
-                  alignment: Alignment.centerLeft,
-                  padding: EdgeInsets.only(top: 12),
-                  child: Text(user.fullName),
+                ],
+              ),
+              Container(
+                alignment: Alignment.centerLeft,
+                padding: EdgeInsets.only(top: 12),
+                child: Text(user.fullName),
 
-                ),
-                Container(
-                  alignment: Alignment.centerLeft,
-                  padding: EdgeInsets.only(top: 5),
-                  child: Text(user.bio),
-                ),
-              ],
-            ),
-          );
-        },
+              ),
+              Container(
+                alignment: Alignment.centerLeft,
+                padding: EdgeInsets.only(top: 5),
+                child: Text(user.bio),
+              ),
+            ],
+          ),
+        );
+      },
     );
   }
 
@@ -248,7 +249,7 @@ class _PracticeProfileState extends State<PracticeProfile> {
       body: SingleChildScrollView(
         child: Column(
           children: [
-           buildProfileHeader(),
+            buildProfileHeader(),
             Divider(),
             buildProfileButton(),
             Divider(),
@@ -263,103 +264,122 @@ class _PracticeProfileState extends State<PracticeProfile> {
                 Navigator.pushReplacement(context, PageRouteBuilder(pageBuilder: (a,b,c)=> PracticeProfile(), transitionDuration: Duration(seconds: 0)));
                 return Future.value(false);
               },
-              child: FutureBuilder(
-                  future: FirebaseFirestore.instance
-                      .collection('user')
-                      .doc(widget.profileId)
-                      .collection('post')
-                      .orderBy('time', descending: true)
-                      .get(),
-                  builder: (context, snapshot) {
-                    if (snapshot.hasData && snapshot.connectionState == ConnectionState.done) {
-                      return ListView.builder (
-                        //scrollDirection: Axis.vertical,
-                        physics: NeverScrollableScrollPhysics(),
-                        shrinkWrap: true,
-                        itemCount: snapshot.data.docs.length,
-                        itemBuilder: (context, index) {
-                          DocumentSnapshot myPost = snapshot.data.docs[index];
-                          return Column(
-                            children: [
-                              Container(
-                                margin: EdgeInsets.all(5),
-                                width: MediaQuery
-                                    .of(context)
-                                    .size
-                                    .width,
-                                height: MediaQuery
-                                    .of(context)
-                                    .size
-                                    .height * 0.2,
-                                child: Card(
-                                    margin: EdgeInsets.all(5),
-                                    child: Column(
-                                      children: <Widget>[
-                                        ListTile(
-                                          leading:
-                                          CircleAvatar(
-                                            radius: 30,
-                                            backgroundImage: currentUser.photoURL != null ?  Image.network(currentUser.photoURL).image: Image.network("https://t4.ftcdn.net/jpg/03/32/59/65/360_F_332596535_lAdLhf6KzbW6PWXBWeIFTovTii1drkbT.jpg").image,
+                child: FutureBuilder(
+                    future: FirebaseFirestore.instance
+                        .collection('user')
+                        .doc(widget.profileId)
+                        .collection('post')
+                        .orderBy('time', descending: true)
+                        .get(),
+                    builder: (context, snapshot) {
+                      if (snapshot.hasData && snapshot.connectionState == ConnectionState.done) {
+                        return ListView.builder (
+                          physics: NeverScrollableScrollPhysics(),
+                          shrinkWrap: true,
+                          itemCount: snapshot.data.docs.length,
+                          itemBuilder: (context, index) {
+                            DocumentSnapshot myPost = snapshot.data.docs[index];
+                            return Column(
+                              children: [
+                                Container(
+                                  margin: EdgeInsets.all(5),
+                                  width: MediaQuery
+                                      .of(context)
+                                      .size
+                                      .width,
+                                  height: MediaQuery
+                                      .of(context)
+                                      .size
+                                      .height * 0.2,
+                                  child: Card(
+                                      margin: EdgeInsets.all(5),
+                                      child: Column(
+                                        children: <Widget>[
+                                          ListTile(
+                                            leading:
+                                            CircleAvatar(
+                                              radius: 30,
+                                              backgroundImage: (myPost.data()['profile_picture'] != null)? Image.network(myPost.data()['profile_picture']).image: Image.network("https://t4.ftcdn.net/jpg/03/32/59/65/360_F_332596535_lAdLhf6KzbW6PWXBWeIFTovTii1drkbT.jpg").image,
+                                            ),
+                                            title:
+                                            Text('${myPost.data()['user_name']}'),
+                                            subtitle:
+                                            Text("${myPost.data()['post']}"),
                                           ),
-                                          title:
-                                          Text('${myPost.data()['user_name']}'),
-                                          subtitle:
-                                          Text("${myPost.data()['post']}"),
-                                        ),
-                                        ButtonBar(
-                                          children: <Widget>[
-                                            IconButton(
-                                              icon: Icon(Icons.favorite_border),
-                                              alignment: Alignment(-60, 0),
-                                              onPressed: null,
-                                            ),
-                                            IconButton(
-                                              icon: Icon(Icons.add_comment),
-                                              color: Colors.lightBlue,
-                                              alignment: Alignment(-60, 0),
-                                              onPressed: null,
-                                            ),
-                                            myPost.data()['audioFile'] != null? IconButton(
-                                              icon: (selectedIndex == index && !isPlaying) ? Icon(Icons.pause): Icon(Icons.music_note_sharp),
-                                              onPressed:()async{
-                                                if(!isPlaying)
-                                                {
-                                                  isPlaying = true;
-                                                  setState(() {
-                                                    selectedIndex = index;
-                                                  });
-                                                  audioPlayer.play(await myPost.data()['audioFile'], isLocal: false);
-                                                  audioPlayer.onPlayerCompletion.listen((event) {
-                                                    setState(() {
-                                                      isPlaying = false;
-                                                      selectedIndex = -1;
-                                                    });
-                                                  });
-                                                }
-                                                else
-                                                {
-                                                  await audioPlayer.pause();
-                                                  isPlaying = false;
-                                                }
-                                                setState(() {});
-                                              },
-                                              color: Colors.black,
-                                              alignment: Alignment(-60, 0),): null,
-                                          ],
-                                        )
-                                      ],
-                                    )),
-                              ),
-                            ],
-                          );
-                        },
-                      );
-                    }
-                    return Center(
-                      child: CircularProgressIndicator(),
-                    );
+                                          Row(
+                                            mainAxisAlignment: MainAxisAlignment.start,
+                                            children: [
+                                              ButtonBar(
+                                                children: <Widget>[
+                                                  IconButton(
+                                                    icon: (selectedLike != index) ? Icon(Icons.favorite_border): Icon(Icons.favorite, color: Colors.pink,),
+                                                    onPressed: () {
+                                                      if(!isLiked){
+                                                        setState(() {
+                                                          isLiked = true;
+                                                          selectedLike = index;
+                                                        });
+                                                      }
+                                                      else if(isLiked){
+                                                        setState(() {
+                                                          isLiked = false;
+                                                          selectedLike = -1;
+                                                        });
+                                                      }
+                                                    },
+                                                  ),
+                                                  IconButton(
+                                                    icon: Icon(Icons.comment),
+                                                    color: Colors.lightBlue,
+                                                    onPressed: (){
 
-                  }),
+                                                    },
+                                                  ),
+                                                  myPost.data()['audioFile'] != null? IconButton(
+                                                    icon: (selectedIndex == index && !isPlaying) ? Icon(Icons.pause): Icon(Icons.music_note_sharp),
+                                                    onPressed:()async{
+                                                      if(!isPlaying)
+                                                      {
+                                                        isPlaying = true;
+                                                        setState(() {
+                                                          selectedIndex = index;
+                                                        });
+                                                        audioPlayer.play(await myPost.data()['audioFile'], isLocal: false);
+                                                        audioPlayer.onPlayerCompletion.listen((event) {
+                                                          setState(() {
+                                                            isPlaying = false;
+                                                            selectedIndex = -1;
+                                                          });
+                                                        });
+                                                      }
+                                                      else
+                                                      {
+                                                        await audioPlayer.pause();
+                                                        isPlaying = false;
+                                                      }
+                                                      setState(() {});
+                                                    },
+                                                    color: Colors.black,
+                                                    // alignment:Alignment(-60, 0),)
+                                                  ): null,
+
+                                                ],
+                                              ),
+                                            ],
+                                          )
+                                        ],
+                                      )),
+                                ),
+                              ],
+                            );
+                          },
+                        );
+                      }
+                      return Center(
+                        child: CircularProgressIndicator(),
+                      );
+
+                    }),
               ),
             ),
           ],

@@ -105,16 +105,16 @@ class _UserVibeState extends State<UserVibe> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             IconButton(
-                icon: Icon(Icons.arrow_back_ios, size: 30,),
-                onPressed: () => Navigator.pop(context),
+              icon: Icon(Icons.arrow_back_ios, size: 30,),
+              onPressed: () => Navigator.pop(context),
             ),
             SizedBox(height: MediaQuery.of(context).size.height * 0.03,),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Text("Vibe", style: TextStyle(
-                  fontSize: 60,
-                  fontWeight: FontWeight.bold
+                    fontSize: 60,
+                    fontWeight: FontWeight.bold
                 ),
                 ),
                 Icon(Icons.music_note_sharp,size: 60,)

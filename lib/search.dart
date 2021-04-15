@@ -1,8 +1,6 @@
 
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:vibing_app/feed.dart';
 import 'package:vibing_app/model/user.dart';
 
 import 'User_Profile.dart';
@@ -42,8 +40,8 @@ class _UserSearchState extends State<UserSearch> {
           hintText: "Search for a user",
           filled: true,
           suffixIcon: IconButton(
-              icon: Icon(Icons.clear),
-             onPressed: clearSearch,
+            icon: Icon(Icons.clear),
+            onPressed: clearSearch,
           ),
         ),
         onFieldSubmitted: handleSearch,
@@ -92,7 +90,7 @@ class _UserSearchState extends State<UserSearch> {
     return Scaffold(
       appBar: buildSearchField(),
       body:
-          searchResults == null ? searchContainer(): buildSearchResults(),
+      searchResults == null ? searchContainer(): buildSearchResults(),
     );
   }
 }
@@ -130,5 +128,5 @@ class UserResult extends StatelessWidget {
 
 showUserProfile(BuildContext context, {String profileID})
 {
-   Navigator.push(context, MaterialPageRoute(builder: (context)=> PracticeProfile(profileId: profileID,)));
+  Navigator.push(context, MaterialPageRoute(builder: (context)=> PracticeProfile(profileId: profileID,)));
 }

@@ -7,6 +7,7 @@ import 'package:file_picker/file_picker.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_password_strength/flutter_password_strength.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:vibing_app/model/user_provider.dart';
@@ -250,10 +251,12 @@ class _UserRegState extends State<UserReg> {
       child:  Text('Upload Video'),
       color: Colors.yellow,
     );
+
     return new Scaffold(
       resizeToAvoidBottomInset: true,
       backgroundColor: Colors.yellow,
       body: SingleChildScrollView(
+        reverse: true,
         child: Stack(
           children: [
             Container(
@@ -263,7 +266,7 @@ class _UserRegState extends State<UserReg> {
                 child: Column(
                   crossAxisAlignment:  CrossAxisAlignment.center,
                   children: <Widget>[
-                    SizedBox(height: MediaQuery.of(context).size.height *0.2,),
+                    SizedBox(height: MediaQuery.of(context).size.height *0.07,),
                     Text('Register',
                       style:TextStyle(
                         fontWeight: FontWeight.bold,
@@ -276,6 +279,16 @@ class _UserRegState extends State<UserReg> {
                     _regEmail,
                     SizedBox(height: MediaQuery.of(context).size.height * 0.03,),
                     _regpass,
+                    SizedBox(height:MediaQuery.of(context).size.height * 0.03),
+                    FlutterPasswordStrength(
+                        password: _rPasswordController.text,
+                        strengthCallback: (strength){
+                          debugPrint(strength.toString());
+                        },
+                      width: (MediaQuery.of(context).size.width * 0.5) ,
+                      radius: 8,
+                      height: 10,
+                    ),
                     SizedBox(height:MediaQuery.of(context).size.height * 0.03),
                     uploadVideoButton,
                     SizedBox(height: MediaQuery.of(context).size.height * 0.03,),

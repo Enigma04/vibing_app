@@ -26,7 +26,7 @@ class Post extends StatefulWidget {
     );
   }
 
- int getLikes(likes)
+  int getLikes(likes)
   {
     if(likes == 0)
       return 0;
@@ -42,13 +42,13 @@ class Post extends StatefulWidget {
   @override
   _PostState createState() => _PostState(
 
-      time: this.time,
-      ownerID: this.ownerID,
-      user_name: this.user_name,
-      description: this.description,
-      profile_picture: this.profile_picture,
-      likes: this.likes,
-      likeCount: getLikes(this.likes),
+    time: this.time,
+    ownerID: this.ownerID,
+    user_name: this.user_name,
+    description: this.description,
+    profile_picture: this.profile_picture,
+    likes: this.likes,
+    likeCount: getLikes(this.likes),
 
   );
 
@@ -74,39 +74,39 @@ class _PostState extends State<Post> {
     this.likes,
     this.description,
     this.likeCount
-});
+  });
 
 
   handleLikes()
   {
     bool _isLiked = likes[currentUserId] = true;
     if(_isLiked)
-      {
-        FirebaseFirestore.instance.collection('user_posts').doc(time).update({'likes.$currentUserId': false});
-        removeLikeFromActivityFeed();
-        setState(() {
-          likeCount -=1;
-          isLiked = false;
-          likes[currentUserId] = false;
-        });
+    {
+      FirebaseFirestore.instance.collection('user_posts').doc(time).update({'likes.$currentUserId': false});
+      removeLikeFromActivityFeed();
+      setState(() {
+        likeCount -=1;
+        isLiked = false;
+        likes[currentUserId] = false;
+      });
 
-      }
+    }
     else if(!_isLiked)
-      {
-        FirebaseFirestore.instance.collection('user_posts').doc(time).update({'likes.$currentUserId': true});
-        addLikeToActivityFeed();
+    {
+      FirebaseFirestore.instance.collection('user_posts').doc(time).update({'likes.$currentUserId': true});
+      addLikeToActivityFeed();
+      setState(() {
+        likeCount += 1;
+        isLiked = true;
+        likes[currentUserId] = true;
+        showHeart = true;
+      });
+      Timer(Duration(milliseconds: 500), () {
         setState(() {
-          likeCount += 1;
-          isLiked = true;
-          likes[currentUserId] = true;
-          showHeart = true;
+          showHeart = false;
         });
-        Timer(Duration(milliseconds: 500), () {
-          setState(() {
-            showHeart = false;
-          });
-        });
-      }
+      });
+    }
   }
 
   addLikeToActivityFeed() {
@@ -138,8 +138,46 @@ class _PostState extends State<Post> {
     }
   }
 
+  buildLikes(){
+    return FutureBuilder(
+        future: FirebaseFirestore.instance.collection('user_posts').get(),
+        builder: (context, snapshot) {
+          if(snapshot.hasData && snapshot.connectionState == ConnectionState.done)
+            {
+               return Column(
+                 children: [
+                   IconButton(
+                       icon: (!isLiked) ? Icon(Icons.favorite_border): Icon(Icons.favorite, color: Colors.pink,),
+                       onPressed: handleLikes
+                   ),
+                   Row(
+                     children: <Widget>[
+                       Container(
+                         //margin: EdgeInsets.only(left: 20.0),
+                         child: Text(
+                           "$likeCount likes",
+                           style: TextStyle(
+                             color: Colors.black,
+                             fontWeight: FontWeight.bold,
+                           ),
+                         ),
+                       ),
+                     ],
+                   ),
+                 ],
+               );
+            }
+          else
+            return Center(
+              child: CircularProgressIndicator(),
+            );
+        }
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Container();
+    isLiked = (likes[currentUserId] == true);
+    return buildLikes();
   }
 }

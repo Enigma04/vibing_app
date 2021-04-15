@@ -102,6 +102,11 @@ class _EditProfileState extends State<EditProfile> {
           var completedTask = uploadTask.snapshot;
           downloadImageURL =  await completedTask.ref.getDownloadURL();
           FirebaseAuth.instance.currentUser.updateProfile(photoURL: downloadImageURL);
+          FirebaseFirestore.instance.collection('user').doc(FirebaseAuth.instance.currentUser.uid)
+              .collection('user Info').doc(FirebaseAuth.instance.currentUser.uid).
+          update({
+            "profile_picture": downloadImageURL,
+          });
         });
         print(downloadImageURL);
         Fluttertoast.showToast(
@@ -170,7 +175,8 @@ class _EditProfileState extends State<EditProfile> {
     else
       Fluttertoast.showToast(
         backgroundColor: Colors.red,
-          msg: 'Something went wrong, try again');
+          msg: 'Something went wrong, try again'
+      );
   }
   Widget build(BuildContext context) {
 

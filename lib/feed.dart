@@ -1,4 +1,3 @@
-
 import 'package:audioplayers/audioplayers.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -9,7 +8,6 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:vibing_app/User_Login.dart';
 import 'package:vibing_app/User_Profile.dart';
 import 'package:vibing_app/collaboration.dart';
-import 'package:vibing_app/model/User_post_model.dart';
 import 'package:vibing_app/model/auth.dart';
 import 'package:vibing_app/search.dart';
 import 'package:vibing_app/your_sound_recording_list.dart';
@@ -18,7 +16,6 @@ import 'package:vibing_app/your_sound_recording_list.dart';
 class Feed extends StatefulWidget {
   Feed({this.auth,this.otherUsers});
   final BaseAuth auth;
-  //final VoidCallback onSignedOut;
   final User otherUsers;
 
   @override
@@ -29,7 +26,9 @@ class _FeedState extends State<Feed> {
 
   String email = "";
   bool isPlaying;
+  bool isLiked;
   int selectedIndex;
+  int selectedLike;
   int likeCount;
   AudioPlayer audioPlayer = AudioPlayer(mode: PlayerMode.LOW_LATENCY);
 
@@ -39,23 +38,23 @@ class _FeedState extends State<Feed> {
       email = preferences.getString('email');
     });
   }
-
+/*
   getLikes() async{
-    QuerySnapshot likeSnapshot = await FirebaseFirestore.instance.collection('user_post').
-    doc().
-    collection('likes').
-    get();
+    DocumentSnapshot likeSnapshot = await FirebaseFirestore.instance.collection('user_post').
+    doc()
     setState(() {
       likeCount = likeSnapshot.docs.length;
     });
 
   }
-  /*
+
+
+
   checkLikes() async{
     DocumentSnapshot doc =
   }
 
-   */
+ */
 
 
   @override
@@ -63,7 +62,9 @@ class _FeedState extends State<Feed> {
   {
     FirebaseAuth.instance.currentUser.reload();
     selectedIndex = -1;
+    selectedLike = -1;
     isPlaying = false;
+    isLiked = false;
     super.initState();
   }
 
@@ -191,48 +192,64 @@ class _FeedState extends State<Feed> {
                                     title: Text('${myPost.data()['user_name']}'),
                                     subtitle: Text("${myPost.data()['post']}"),
                                   ),
-                                  ButtonBar(
-                                    children: <Widget>[
-                                      IconButton(
-                                        icon: Icon(Icons.favorite_border),
-                                        alignment: Alignment(-60, 0),
-                                        onPressed: () {
-
-                                        },
-                                      ),
-                                      IconButton(
-                                        icon: Icon(Icons.add_comment),
-                                        color: Colors.lightBlue,
-                                        alignment: Alignment(-60, 0),
-                                        onPressed: null,
-                                      ),
-                                      myPost.data()['audioFile'] != null? IconButton(
-                                        icon: (selectedIndex == index && !isPlaying) ? Icon(Icons.pause): Icon(Icons.music_note_sharp),
-                                        onPressed:()async{
-                                          if(!isPlaying)
-                                            {
-                                              isPlaying = true;
-                                              setState(() {
-                                                selectedIndex = index;
-                                              });
-                                              audioPlayer.play(await myPost.data()['audioFile'], isLocal: false);
-                                              audioPlayer.onPlayerCompletion.listen((event) {
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    children: [
+                                      ButtonBar(
+                                        children: <Widget>[
+                                          IconButton(
+                                            icon: (selectedLike != index ) ? Icon(Icons.favorite_border): Icon(Icons.favorite, color: Colors.pink,),
+                                            onPressed: () {
+                                              if(!isLiked){
                                                 setState(() {
-                                                  isPlaying = false;
-                                                  selectedIndex = -1;
+                                                  isLiked = true;
+                                                  selectedLike = index;
                                                 });
-                                              });
-                                            }
-                                          else
-                                            {
-                                              await audioPlayer.pause();
-                                              isPlaying = false;
-                                            }
-                                          setState(() {});
-                                        },
-                                        color: Colors.black,
-                                        alignment: Alignment(-60, 0),): null,
+                                              }
+                                              else if(isLiked){
+                                                setState(() {
+                                                  isLiked = false;
+                                                  selectedLike = -1;
+                                                });
+                                              }
+                                            },
+                                          ),
+                                          IconButton(
+                                            icon: Icon(Icons.comment),
+                                            color: Colors.lightBlue,
+                                            onPressed: (){
 
+                                            },
+                                          ),
+                                          myPost.data()['audioFile'] != null? IconButton(
+                                            icon: (selectedIndex == index && !isPlaying) ? Icon(Icons.pause): Icon(Icons.music_note_sharp),
+                                            onPressed:()async{
+                                              if(!isPlaying)
+                                              {
+                                                isPlaying = true;
+                                                setState(() {
+                                                  selectedIndex = index;
+                                                });
+                                                audioPlayer.play(await myPost.data()['audioFile'], isLocal: false);
+                                                audioPlayer.onPlayerCompletion.listen((event) {
+                                                  setState(() {
+                                                    isPlaying = false;
+                                                    selectedIndex = -1;
+                                                  });
+                                                });
+                                              }
+                                              else
+                                              {
+                                                await audioPlayer.pause();
+                                                isPlaying = false;
+                                              }
+                                              setState(() {});
+                                            },
+                                            color: Colors.black,
+                                          ): null,
+
+                                        ],
+                                      ),
                                     ],
                                   )
                                 ],
@@ -277,6 +294,4 @@ showUserProfile(BuildContext context, {String profileID})
 {
   Navigator.push(context, MaterialPageRoute(builder: (context)=> PracticeProfile(profileId: profileID,)));
 }
-
-
 
