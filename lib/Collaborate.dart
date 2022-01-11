@@ -36,7 +36,9 @@ class _CollaborateState extends State<Collaborate>{
               padding: EdgeInsets.only(top: 10) ,
               child: RefreshIndicator(
                 onRefresh: (){
-                  Navigator.pushReplacement(context, PageRouteBuilder(pageBuilder: (a,b,c)=> Collaborate(), transitionDuration: Duration(seconds: 0)));
+                  Navigator.pushReplacement(context,
+                      PageRouteBuilder(pageBuilder: (a,b,c)=>
+                          Collaborate(), transitionDuration: Duration(seconds: 0)));
                   return Future.value(false);
                 },
                 child: FutureBuilder(
@@ -58,7 +60,8 @@ class _CollaborateState extends State<Collaborate>{
                                 DocumentSnapshot collaborators = snapshot.data.docs[index];
                                 //user = AppUser.fromDocument();
                                 return GestureDetector(
-                                  onTap: ()=> Navigator.push(context, MaterialPageRoute(builder: (context)=> ViewCollabDetails(
+                                  onTap: ()=> Navigator.push(context,
+                                      MaterialPageRoute(builder: (context)=> ViewCollabDetails(
                                     photoURL: collaborators.data()['photoURL'].toString(),
                                     postedBy: collaborators.data()['posted_by'],
                                     location: collaborators.data()['location'],
@@ -74,7 +77,8 @@ class _CollaborateState extends State<Collaborate>{
                                       children: [
                                         CircleAvatar(
                                           radius: 50,
-                                          backgroundImage: collaborators.data()['photoURL']!= null ? Image.network(collaborators.data()['photoURL'].toString()).image :
+                                          backgroundImage: collaborators.data()['photoURL']!= null ?
+                                          Image.network(collaborators.data()['photoURL'].toString()).image :
                                           Image.network("https://t4.ftcdn.net/jpg/03/32/59/65/360_F_332596535_lAdLhf6KzbW6PWXBWeIFTovTii1drkbT.jpg").image,
                                         ),
                                         SizedBox(height: MediaQuery.of(context).size.height* 0.01,),

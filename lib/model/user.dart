@@ -41,16 +41,6 @@ class AppUser {
 
     );
   }
-  
 
-
-
-
-  /*
-  User.fromFirestore(Map<String, dynamic> firestore)
-     : firstName = firestore['first_name'],
-      lastName = firestore['last_name'];
-
-   */
 
 }

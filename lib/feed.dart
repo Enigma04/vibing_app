@@ -38,23 +38,7 @@ class _FeedState extends State<Feed> {
       email = preferences.getString('email');
     });
   }
-/*
-  getLikes() async{
-    DocumentSnapshot likeSnapshot = await FirebaseFirestore.instance.collection('user_post').
-    doc()
-    setState(() {
-      likeCount = likeSnapshot.docs.length;
-    });
 
-  }
-
-
-
-  checkLikes() async{
-    DocumentSnapshot doc =
-  }
-
- */
 
 
   @override

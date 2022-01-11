@@ -27,7 +27,9 @@ class PostCollaborations extends StatelessWidget {
               "looking_for": _lookingForText,
               "location": _locationText,
               "description": _descriptionText,
-              "photoURL": FirebaseAuth.instance.currentUser.photoURL != null?  FirebaseAuth.instance.currentUser.photoURL : "https://t4.ftcdn.net/jpg/03/32/59/65/360_F_332596535_lAdLhf6KzbW6PWXBWeIFTovTii1drkbT.jpg",
+              "photoURL": FirebaseAuth.instance.currentUser.photoURL != null?
+              FirebaseAuth.instance.currentUser.photoURL :
+              "https://t4.ftcdn.net/jpg/03/32/59/65/360_F_332596535_lAdLhf6KzbW6PWXBWeIFTovTii1drkbT.jpg",
             }
         ).then((value) {
           print("Collaboration posted!!");
@@ -130,8 +132,10 @@ class PostCollaborations extends StatelessWidget {
         child: Column(
           children: [
             Padding(
-              padding: EdgeInsets.only(right: MediaQuery.of(context).size.width *0.8, top: MediaQuery.of(context).size.height *0.1),
-              child:  IconButton(icon: Icon(Icons.arrow_back_ios), onPressed: ()=> Navigator.pop(context), iconSize: 30,),
+              padding: EdgeInsets.only(right: MediaQuery.of(context).size.width *0.8,
+                  top: MediaQuery.of(context).size.height *0.1),
+              child:  IconButton(icon: Icon(Icons.arrow_back_ios), onPressed: ()=> Navigator.pop(context),
+                iconSize: 30,),
             ),
             _column,
           ],

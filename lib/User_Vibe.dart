@@ -1,5 +1,4 @@
 import 'dart:io';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -26,9 +25,12 @@ class _UserVibeState extends State<UserVibe> {
   final _formkey = GlobalKey<FormState>();
 
   Future vibe() async{
-    DocumentReference ds = FirebaseFirestore.instance.collection('user_posts').doc(Timestamp.now().toDate().toString());
-    DocumentReference ds1 = FirebaseFirestore.instance.collection('user').doc(user.uid).collection('post').doc(Timestamp.now().toDate().toString());
-    DocumentReference ds2 = FirebaseFirestore.instance.collection('user').doc(user.uid).collection('Audio Files').doc();
+    DocumentReference ds = FirebaseFirestore.instance.collection('user_posts')
+        .doc(Timestamp.now().toDate().toString());
+    DocumentReference ds1 = FirebaseFirestore.instance.collection('user')
+        .doc(user.uid).collection('post').doc(Timestamp.now().toDate().toString());
+    DocumentReference ds2 = FirebaseFirestore.instance.collection('user')
+        .doc(user.uid).collection('Audio Files').doc();
     if(uploadedFile == false && vibeController.text.isNotEmpty)
     {
       Map <String, dynamic> userPost={

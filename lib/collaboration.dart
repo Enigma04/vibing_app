@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:vibing_app/post_collaborations.dart';
-import 'package:vibing_app/Collaborate.dart';
+
 class Collaboration extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -13,12 +12,21 @@ class Collaboration extends StatelessWidget {
             children: <Widget>[
               IconButton(icon: Icon(Icons.arrow_back_ios), onPressed: ()=> Navigator.pop(context), iconSize: 30,),
               SizedBox(height: 20,),
-              Text("Collaboration", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 60,),),
+              Text("Collaboration",
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 60,),
+              ),
               SizedBox(height: MediaQuery.of(context).size.height*0.05,),
               new FlatButton(
                 minWidth: 400,
                 height: 50,
-                child: Text('Post a collaboration', style: TextStyle(color: Colors.yellow, fontWeight: FontWeight.bold, fontSize: 22),),
+                child: Text('Post a collaboration',
+                  style: TextStyle(
+                      color: Colors.yellow,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 22),
+                ),
                 color: Colors.white,
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(10),
@@ -33,7 +41,12 @@ class Collaboration extends StatelessWidget {
               new FlatButton(
                 minWidth: 400,
                 height: 50,
-                child: Text('View Bulletin Board', style: TextStyle(color: Colors.yellow, fontWeight: FontWeight.bold, fontSize: 22),),
+                child: Text('View Bulletin Board',
+                  style: TextStyle(
+                      color: Colors.yellow,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 22),
+                ),
                 color: Colors.white,
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(10),

@@ -67,27 +67,6 @@ class _EditProfileState extends State<EditProfile> {
       ],
     );
   }
-/*
-  Future <String> pickImage() async
-  {
-    PickedFile pickedFile = await ImagePicker().getImage(source: ImageSource.gallery);
-    File profile_pic = File(pickedFile.path);
-    var storageReference = FirebaseStorage.instance.ref().child(
-        "user/profile/${FirebaseAuth.instance.currentUser.uid}");
-    var uploadTask = storageReference.putFile(profile_pic);
-    await uploadTask.whenComplete(() async{
-      var completedTask = await uploadTask.snapshot;
-      String downloadURL = await completedTask.ref.getDownloadURL();
-      FirebaseAuth.instance.currentUser.updateProfile(photoURL: downloadURL);
-      var dr = FirebaseFirestore.instance.collection('users').doc(FirebaseAuth.instance.currentUser.uid).collection('userInfo').doc(FirebaseAuth.instance.currentUser.uid).update({"profilePicture": downloadURL});
-      var dr2 = FirebaseFirestore.instance.collection("user search").doc(FirebaseAuth.instance.currentUser.uid).update(
-          {"profilePicture": downloadURL});
-      print(dr);
-      print(dr2);
-    });
-  }
-
- */
 
   uploadImage() async
   {
@@ -112,7 +91,9 @@ class _EditProfileState extends State<EditProfile> {
         Fluttertoast.showToast(
           backgroundColor: Colors.green,
           msg: 'Profile Picture updated successfully'
-        ).then((value) => Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=> PracticeProfile(profileId: FirebaseAuth.instance.currentUser?.uid,))));
+        ).then((value) => Navigator.pushReplacement(context,
+            MaterialPageRoute(builder: (context)=>
+                PracticeProfile(profileId: FirebaseAuth.instance.currentUser?.uid,))));
       }
       catch(e) {
         Fluttertoast.showToast(
@@ -190,7 +171,9 @@ class _EditProfileState extends State<EditProfile> {
           backgroundImage: Image.file(image).image,
         ): CircleAvatar(
           radius: 85,
-          backgroundImage: (FirebaseAuth.instance.currentUser.photoURL != null)? Image.network(FirebaseAuth.instance.currentUser.photoURL).image : Image.network("https://t4.ftcdn.net/jpg/03/32/59/65/360_F_332596535_lAdLhf6KzbW6PWXBWeIFTovTii1drkbT.jpg").image,
+          backgroundImage: (FirebaseAuth.instance.currentUser.photoURL != null)?
+          Image.network(FirebaseAuth.instance.currentUser.photoURL).image :
+          Image.network("https://t4.ftcdn.net/jpg/03/32/59/65/360_F_332596535_lAdLhf6KzbW6PWXBWeIFTovTii1drkbT.jpg").image,
         ),
       ),
     );
@@ -202,7 +185,9 @@ class _EditProfileState extends State<EditProfile> {
       ),
       body: RefreshIndicator(
         onRefresh: (){
-          Navigator.push(context, PageRouteBuilder(pageBuilder: (a,b,c)=> EditProfile(), transitionDuration: Duration(seconds: 0)));
+          Navigator.push(context,
+              PageRouteBuilder(pageBuilder: (a,b,c)=>
+                  EditProfile(), transitionDuration: Duration(seconds: 0)));
           return Future.value(false);
         },
        child: Column(

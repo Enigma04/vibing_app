@@ -138,8 +138,10 @@ class _PracticeProfileState extends State<PracticeProfile> {
     setState(() {
       isFollowing = true;
     });
-    FirebaseFirestore.instance.collection('user').doc(widget.profileId).collection('followers').doc(currentUserId).set({});
-    FirebaseFirestore.instance.collection('user').doc(currentUserId).collection('following').doc(widget.profileId).set({});
+    FirebaseFirestore.instance.collection('user').doc(widget.profileId)
+        .collection('followers').doc(currentUserId).set({});
+    FirebaseFirestore.instance.collection('user').doc(currentUserId)
+        .collection('following').doc(widget.profileId).set({});
   }
 
   buildProfileHeader()
@@ -213,7 +215,8 @@ class _PracticeProfileState extends State<PracticeProfile> {
     editProfileButton()
     {
       WidgetsBinding.instance.addPostFrameCallback((_) {
-        Navigator.push(context, MaterialPageRoute(builder: (context)=> EditProfile(currentUserId: currentUserId,))); }
+        Navigator.push(context, MaterialPageRoute(builder: (context)=>
+            EditProfile(currentUserId: currentUserId,))); }
       );
     }
 
@@ -261,7 +264,9 @@ class _PracticeProfileState extends State<PracticeProfile> {
                   .size
                   .height * 0.01),
               child: RefreshIndicator(onRefresh: (){
-                Navigator.pushReplacement(context, PageRouteBuilder(pageBuilder: (a,b,c)=> PracticeProfile(), transitionDuration: Duration(seconds: 0)));
+                Navigator.pushReplacement(context,
+                    PageRouteBuilder(pageBuilder: (a,b,c)=> PracticeProfile(),
+                        transitionDuration: Duration(seconds: 0)));
                 return Future.value(false);
               },
                 child: FutureBuilder(
@@ -299,7 +304,9 @@ class _PracticeProfileState extends State<PracticeProfile> {
                                             leading:
                                             CircleAvatar(
                                               radius: 30,
-                                              backgroundImage: (myPost.data()['profile_picture'] != null)? Image.network(myPost.data()['profile_picture']).image: Image.network("https://t4.ftcdn.net/jpg/03/32/59/65/360_F_332596535_lAdLhf6KzbW6PWXBWeIFTovTii1drkbT.jpg").image,
+                                              backgroundImage: (myPost.data()['profile_picture'] != null)?
+                                              Image.network(myPost.data()['profile_picture']).image:
+                                              Image.network("https://t4.ftcdn.net/jpg/03/32/59/65/360_F_332596535_lAdLhf6KzbW6PWXBWeIFTovTii1drkbT.jpg").image,
                                             ),
                                             title:
                                             Text('${myPost.data()['user_name']}'),
@@ -312,7 +319,8 @@ class _PracticeProfileState extends State<PracticeProfile> {
                                               ButtonBar(
                                                 children: <Widget>[
                                                   IconButton(
-                                                    icon: (selectedLike != index) ? Icon(Icons.favorite_border): Icon(Icons.favorite, color: Colors.pink,),
+                                                    icon: (selectedLike != index) ? Icon(Icons.favorite_border):
+                                                    Icon(Icons.favorite, color: Colors.pink,),
                                                     onPressed: () {
                                                       if(!isLiked){
                                                         setState(() {
@@ -336,7 +344,8 @@ class _PracticeProfileState extends State<PracticeProfile> {
                                                     },
                                                   ),
                                                   myPost.data()['audioFile'] != null? IconButton(
-                                                    icon: (selectedIndex == index && !isPlaying) ? Icon(Icons.pause): Icon(Icons.music_note_sharp),
+                                                    icon: (selectedIndex == index && !isPlaying) ? Icon(Icons.pause):
+                                                    Icon(Icons.music_note_sharp),
                                                     onPressed:()async{
                                                       if(!isPlaying)
                                                       {

@@ -1,9 +1,7 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
+
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/material.dart';
 import 'package:vibing_app/model/firestore_service.dart';
-import 'user.dart';
-import 'auth.dart';
+
 
 class UserProvider{
   final firestoreService = new FirestoreService();

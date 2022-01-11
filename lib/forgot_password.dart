@@ -9,12 +9,12 @@ class ForgotPass extends StatefulWidget {
 
 class _ForgotPassState extends State<ForgotPass> {
 
-  static final formkey_forgot = GlobalKey<FormState>();
- static  String _userEmail;
+  static final FormkeyForgot = GlobalKey<FormState>();
+  static String _userEmail;
 
   bool _validateAndSave()
   {
-    final form = formkey_forgot.currentState;
+    final form = FormkeyForgot.currentState;
     if(form.validate())
     {
       form.save();
@@ -29,7 +29,7 @@ class _ForgotPassState extends State<ForgotPass> {
     if(_validateAndSave()) {
       try {
           await Auth().resetPassword(_userEmail);
-         formkey_forgot.currentState.reset();
+          FormkeyForgot.currentState.reset();
       }
       catch (e) {
         print('Error: $e');
@@ -71,7 +71,7 @@ class _ForgotPassState extends State<ForgotPass> {
       body: Container(
         child:
             Form(
-              key: formkey_forgot,
+              key: FormkeyForgot,
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.center ,
